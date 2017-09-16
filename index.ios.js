@@ -15,6 +15,19 @@ import {
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 
 export default class tombnb extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: ''
+    }
+  }
+
+  onDayPress = (day) => {
+    this.setState({
+      selected: day.dateString
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -27,8 +40,9 @@ export default class tombnb extends Component {
           futureScrollRange={50}
           // Enable or disable scrolling of calendar list
           scrollEnabled={true}
+          onDayPress={this.onDayPress}
           markedDates={{
-            '2017-09-09': { selected: true },
+            [this.state.selected]: { selected: true },
             '2017-09-19': { marked: true },
             '2017-09-29': { disabled: true }
           }}
