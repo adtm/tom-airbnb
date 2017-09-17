@@ -3,8 +3,15 @@ import { ScrollView, View, Text } from 'react-native';
 import List from 'antd-mobile/lib/list';
 import TextareaItem from 'antd-mobile/lib/textarea-item';
 import Button from 'antd-mobile/lib/button';
- 
+import DatePicker from 'antd-mobile/lib/date-picker';
+import moment from 'moment'
+import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { createForm } from 'rc-form';
+
+const gmtNow = moment().utcOffset(0);
+
+const maxDate = moment('2016-12-03', 'YYYY-MM-DD');
+const minDate = moment('2015-08-06 +0800', 'YYYY-MM-DD Z').utcOffset(8);
 
 class ModalScreen extends Component {
   static navigatorButtons = {
@@ -46,7 +53,7 @@ class ModalScreen extends Component {
       <View >
         <List renderHeader={() => 'Person information'}>
           <TextareaItem
-            {...getFieldProps('control')}
+            {...getFieldProps('control') }
             placeholder="Name"
             data-seed="name"
             clear
@@ -63,7 +70,22 @@ class ModalScreen extends Component {
             clear
           />
         </List>
-        <Button style={{ margin: 10}} type="primary" >Book</Button>
+        <List renderHeader={() => 'Booking information'}>
+          <DatePicker
+            mode="date"
+            format={val => val.format('YYYY-MM-DD')}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            {...getFieldProps('customformat', {
+              initialValue: moment(this.props.selection, 'YYYY-MM-DD')
+            }) }
+            maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
+            minDate={moment(this.props.today, 'YYYY-MM-DD')}
+          ><List.Item arrow="horizontal">Book Date</List.Item>
+          </DatePicker>
+        </List>
+        <Button style={{ margin: 10 }} type="primary" >Book</Button>
       </View>
     );
   }

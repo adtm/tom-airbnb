@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 
 import CalendarView from '../components/calendar_view'
-
+import moment from 'moment';
 export default class FirstTabScreen extends Component {
   static navigatorButtons = {
     rightButtons: [
@@ -32,8 +32,19 @@ export default class FirstTabScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      today: moment().format("YYYY-MM-DD"),
+      selection: moment().format("YYYY-MM-DD"),
+      lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD")
+    };
     // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+  }
+
+  handleDaySelect = day => {
+    this.setState({
+      selection: day.dateString
+    });
   }
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -42,7 +53,11 @@ export default class FirstTabScreen extends Component {
         this.props.navigator.showModal({
           screen: "example.ModalScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
-          passProps: {}, // simple serializable object that will pass as props to the modal (optional)
+          passProps: {
+            today: this.state.today,
+            selection: this.state.selection,
+            lastDay: this.state.lastDay
+          }, // simple serializable object that will pass as props to the modal (optional)
           navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
           animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
         });
@@ -52,8 +67,12 @@ export default class FirstTabScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1}}>
-        <CalendarView/>
+      <View style={{ flex: 1 }}>
+        <CalendarView
+          today={this.state.today}
+          lastDay={this.state.lastDay}
+          onDaySelect={this.handleDaySelect}
+        />
       </View>
     )
   }

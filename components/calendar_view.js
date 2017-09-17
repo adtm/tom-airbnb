@@ -5,14 +5,13 @@ import {
   StyleSheet
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import moment from 'moment';
+
 
 export default class CalendarView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       items: {},
-      maxDate: moment().add(2, 'weeks').format("YYYY-MM-DD")
     };
   }
 
@@ -21,8 +20,9 @@ export default class CalendarView extends Component {
       <Agenda
         items={this.state.items}
         loadItemsForMonth={this.loadItems}
-        selected={moment().format("YYYY-MM-DD")}
-        maxDate={this.state.maxDate}
+        selected={this.props.selection}
+        maxDate={this.props.lastDay}
+        onDayPress={this.props.onDaySelect}
         renderItem={this.renderItem}
         renderEmptyDate={this.renderEmptyDate}
         rowHasChanged={this.rowHasChanged}
