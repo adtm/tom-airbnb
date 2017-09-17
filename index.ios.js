@@ -1,65 +1,16 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import { Navigation } from 'react-native-navigation';
 
-import React, { Component } from 'react';
-import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { registerScreens } from './screens';
 
-import { Calendar, CalendarList } from 'react-native-calendars';
-import moment from 'moment';
+registerScreens(); // this is where you register all of your app's screens
 
-export default class tombnb extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: '',
-      maxDate: moment().add(5, 'days').format("YYYY-MM-DD")
+// start the app
+Navigation.startTabBasedApp({
+  tabs: [
+    {
+      label: 'One',
+      screen: 'example.FirstTabScreen', // this is a registered name for a screen
+      title: 'Calendar'
     }
-  }
-
-  onDayPress = (day) => {
-    this.setState({
-      selected: day.dateString
-    });
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <CalendarList
-          // Callback which gets executed when visible months change in scroll view. Default = undefined
-          onVisibleMonthsChange={(months) => { console.log('now these months are visible', months); }}
-          // Max amount of months allowed to scroll to the past. Default = 50
-          pastScrollRange={50}
-          // Max amount of months allowed to scroll to the future. Default = 50
-          futureScrollRange={50}
-          // Enable or disable scrolling of calendar list
-          scrollEnabled={true}
-          onDayPress={this.onDayPress}
-          maxDate={this.state.maxDate}
-          markedDates={{
-            [this.state.selected]: { selected: true },
-            '2017-09-19': { marked: true },
-            '2017-09-29': { disabled: true }
-          }}
-        />
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    flex: 1
-  }
+  ]
 });
-
-AppRegistry.registerComponent('tombnb', () => tombnb);
