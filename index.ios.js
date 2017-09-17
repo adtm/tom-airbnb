@@ -20,7 +20,7 @@ export default class tombnb extends Component {
     super(props);
     this.state = {
       selected: '',
-      maxDate: moment().add('days', 5).format("YYYY-MM-DD")
+      maxDate: moment().add(5, 'days').format("YYYY-MM-DD")
     }
   }
 
