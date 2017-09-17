@@ -12,13 +12,15 @@ import {
   View
 } from 'react-native';
 
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import { Calendar, CalendarList } from 'react-native-calendars';
+import moment from 'moment';
 
 export default class tombnb extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: ''
+      selected: '',
+      maxDate: moment().add('days', 5).format("YYYY-MM-DD")
     }
   }
 
@@ -41,6 +43,7 @@ export default class tombnb extends Component {
           // Enable or disable scrolling of calendar list
           scrollEnabled={true}
           onDayPress={this.onDayPress}
+          maxDate={this.state.maxDate}
           markedDates={{
             [this.state.selected]: { selected: true },
             '2017-09-19': { marked: true },
