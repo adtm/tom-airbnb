@@ -8,9 +8,12 @@ registerScreens(); // this is where you register all of your app's screens
 Navigation.startTabBasedApp({
   tabs: [
     {
-      label: 'One',
       screen: 'example.FirstTabScreen', // this is a registered name for a screen
-      title: 'Calendar'
+      title: 'Calendar',
     }
-  ]
+  ], tabsStyle: { // optional, **iOS Only** add this if you want to style the tab bar beyond the defaults
+    // tabBarHidden: true, // make the tab bar hidden
+    tabBarTranslucent: true
+  }
 });
+
