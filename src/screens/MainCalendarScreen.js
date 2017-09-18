@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
+import moment from 'moment';
 
 import CalendarView from '../components/calendar_view'
-import moment from 'moment';
-export default class FirstTabScreen extends Component {
+
+
+export default class MainCalendarScreen extends Component {
   static navigatorButtons = {
     rightButtons: [
       {
@@ -24,6 +26,7 @@ export default class FirstTabScreen extends Component {
    */
   componentWilMount() {
     this.props.navigator.toggleTabs({
+      tabBarHidden: true,
       to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
       animated: false, // does the toggle have transition animation or does it happen immediately (optional)
       drawUnderTabBar: true
@@ -51,7 +54,7 @@ export default class FirstTabScreen extends Component {
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
         this.props.navigator.showModal({
-          screen: "example.ModalScreen", // unique ID registered with Navigation.registerScreen
+          screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
             today: this.state.today,

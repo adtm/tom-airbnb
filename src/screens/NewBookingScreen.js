@@ -13,7 +13,7 @@ const gmtNow = moment().utcOffset(0);
 const maxDate = moment('2016-12-03', 'YYYY-MM-DD');
 const minDate = moment('2015-08-06 +0800', 'YYYY-MM-DD Z').utcOffset(8);
 
-class ModalScreen extends Component {
+class NewBookingScreen extends Component {
   static navigatorButtons = {
     leftButtons: [
       {
@@ -41,7 +41,10 @@ class ModalScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      focused: false
+      focused: false,
+      name: '',
+      surname: '',
+      selection: this.props.selection
     };
     // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
@@ -55,7 +58,7 @@ class ModalScreen extends Component {
           <TextareaItem
             {...getFieldProps('control') }
             placeholder="Name"
-            data-seed="name"
+            value={this.state.name}
             clear
             focused={this.state.focused}
             onFocus={() => {
@@ -63,10 +66,12 @@ class ModalScreen extends Component {
                 focused: false,
               });
             }}
+            onChange={name => this.setState({ name })}
           />
           <TextareaItem
             placeholder="Surname"
-            data-seed="surname"
+            value={this.state.surname}
+            onChange={surname => this.setState({ surname })}
             clear
           />
         </List>
@@ -76,19 +81,20 @@ class ModalScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
+            onChange={date => console.log(date)}
             locale={enUs}
             {...getFieldProps('customformat', {
-              initialValue: moment(this.props.selection, 'YYYY-MM-DD')
+              initialValue: moment(this.state.selection, 'YYYY-MM-DD')
             }) }
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
             minDate={moment(this.props.today, 'YYYY-MM-DD')}
           ><List.Item arrow="horizontal">Book Date</List.Item>
           </DatePicker>
         </List>
-        <Button style={{ margin: 10 }} type="primary" >Book</Button>
+        <Button style={{ margin: 10 }} type="primary" onClick={() => {console.log(this.state)}}>Book</Button>
       </View>
     );
   }
 }
 
-export default createForm()(ModalScreen);
+export default createForm()(NewBookingScreen);

@@ -1,6 +1,6 @@
 import { Navigation } from 'react-native-navigation';
 
-import { registerScreens } from './screens';
+import { registerScreens } from './src/screens';
 
 registerScreens(); // this is where you register all of your app's screens
 
@@ -8,9 +8,11 @@ registerScreens(); // this is where you register all of your app's screens
 Navigation.startTabBasedApp({
   tabs: [
     {
-      screen: 'example.FirstTabScreen', // this is a registered name for a screen
+      screen: 'tombnb.MainCalendarScreen', // this is a registered name for a screen
       title: 'Calendar',
     }
-  ]
+  ], tabStyle: {
+    tabBarHidden: true
+  }
 });
 
