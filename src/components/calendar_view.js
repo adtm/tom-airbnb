@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
   Text,
   View,
@@ -30,7 +31,26 @@ export default class CalendarView extends Component {
     );
   }
 
+  renderItem = (item) => {
+    console.log(item);
+    return (
+      <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
+    );
+  }
+  
   loadItems = (day) => {
+    axios.get('http://localhost:3000/api/bookings/get')
+      .then(foundBookings => {
+        const { data } = foundBookings;
+
+        const newItems = {};
+        date.map(booking => {
+          newItems[booking.dayId] = {
+              
+          }
+        })
+      })
+      .catch(e => console.log(e))
     setTimeout(() => {
       for (let i = -15; i < 85; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
@@ -47,11 +67,11 @@ export default class CalendarView extends Component {
         }
       }
       console.log(this.state.items);
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
-      this.setState({
-        items: newItems
-      });
+      // const newItems = {};
+      // Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
+      // this.setState({
+      //   items: newItems
+      // });
     }, 1000);
     // console.log(`Load Items for ${day.year}-${day.month}`);
   }
