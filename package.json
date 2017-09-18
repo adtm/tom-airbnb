@@ -4,11 +4,17 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "dev-start": "nodemon ./server/app.js & node node_modules/react-native/local-cli/cli.js start & ",
     "test": "jest"
   },
   "dependencies": {
     "antd-mobile": "^1.6.7",
+    "body-parser": "^1.18.1",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
     "moment": "^2.18.1",
+    "mongoose": "^4.11.11",
+    "nodemon": "^1.12.1",
     "rc-form": "^1.4.8",
     "react": "16.0.0-alpha.12",
     "react-native": "0.48.3",
