@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "antd-mobile": "^1.6.7",
+    "axios": "^0.16.2",
     "body-parser": "^1.18.1",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",

@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
-const Booking = require('./booking');
+
+const Booking = {
+  bookerName: String,
+  bookerSurname: String,
+}
 
 const daySchema = new mongoose.Schema({
-  timestamp: Date,
-  bookings: [
-    Booking
-  ]
+  date: String,
+  bookings: [Booking]
 });
 
-module.exports = mongoose.model('day', daySchema);
+module.exports = mongoose.model('Day', daySchema);
