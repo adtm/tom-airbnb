@@ -37,43 +37,30 @@ export default class CalendarView extends Component {
       <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
     );
   }
-  
+
   loadItems = (day) => {
     axios.get('http://localhost:3000/api/bookings/get')
       .then(foundBookings => {
         const { data } = foundBookings;
-
-        const newItems = {};
-        date.map(booking => {
-          newItems[booking.dayId] = {
-              
+        data.map(booking => {
+          const strTime = booking.date;
+          if (!this.state.items[strTime]) {
+            this.state.items[strTime] = [];
+            booking.bookings.map(oneBooking => {
+              this.state.items[strTime].push({
+                name: 'Item for ' + oneBooking.bookerName,
+                height: Math.max(50, Math.floor(Math.random() * 150))
+              });
+            })
           }
         })
       })
       .catch(e => console.log(e))
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 5);
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
-        }
-      }
-      console.log(this.state.items);
-      // const newItems = {};
-      // Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
-      // this.setState({
-      //   items: newItems
-      // });
-    }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
+    const newItems = {};
+    Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
+    this.setState({
+      items: newItems
+    });
   }
 
   renderItem = (item) => {
