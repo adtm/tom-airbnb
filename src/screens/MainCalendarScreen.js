@@ -61,12 +61,14 @@ export default class MainCalendarScreen extends Component {
       const { date } = savedBookings.data;
       Object.keys(this.state.items).forEach(key => {
         if (key == date) {
+          let arr = [];
           savedBookings.data.bookings.map(booking => {
-            this.state.items[key].push({
+            arr.push({
               name: 'Item for ' + booking.bookerName,
               height: Math.max(50, Math.floor(Math.random() * 150))
             })
-          })
+          });
+          this.state.items[key] = arr;
         }
       });
       this.setState({ items: this.state.items });
