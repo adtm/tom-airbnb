@@ -44,7 +44,6 @@ export default class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
-    console.log(r1.name + " " + r2.name);
     return r1.name !== r2.name;
   }
 

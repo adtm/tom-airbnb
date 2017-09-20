@@ -4,6 +4,7 @@ const router = express.Router();
 const booking_router = require('./booking_router');
 const day_router = require('./day_router');
 
+router.use('/bookings', booking_router);
 router.use('/days', day_router);
 
 module.exports = router;

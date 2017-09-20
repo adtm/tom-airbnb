@@ -3,7 +3,7 @@ const router = express.Router();
 
 const day_controller = require('../controllers/day_controller');
 
-router.route('/create')
+router.route('/reset')
   .post(day_controller.resetDays);
 
 module.exports = router;

@@ -95,6 +95,7 @@ export default class MainCalendarScreen extends Component {
           this.setState({
             items: this.state.items
           });
+          console.log(this.state.items)
         })
       })
       .catch(e => console.log(e))
