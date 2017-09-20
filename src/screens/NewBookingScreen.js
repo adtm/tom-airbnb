@@ -9,10 +9,12 @@ import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { createForm } from 'rc-form';
 
 
-const gmtNow = moment().utcOffset(0);
-
-const maxDate = moment('2016-12-03', 'YYYY-MM-DD');
-const minDate = moment('2015-08-06 +0800', 'YYYY-MM-DD Z').utcOffset(8);
+function formatDate(date) {
+  /* eslint no-confusing-arrow: 0 */
+  const pad = n => n < 10 ? `0${n}` : n;
+  const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  return dateStr
+}
 
 class NewBookingScreen extends Component {
   static navigatorButtons = {
@@ -58,9 +60,14 @@ class NewBookingScreen extends Component {
     );
   }
   
+  onChange = date => {
+    this.setState({
+      selection: moment(date).format("YYYY-MM-DD")
+    })
+  }
+
   render() {
     const { getFieldProps } = this.props.form;
-    console.log(this.props);
     return (
       <View >
         <List renderHeader={() => 'Person information'}>
@@ -90,11 +97,9 @@ class NewBookingScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
-            onChange={date => console.log(date)}
+            onChange={this.onChange}
             locale={enUs}
-            {...getFieldProps('customformat', {
-              initialValue: moment(this.state.selection, 'YYYY-MM-DD')
-            }) }
+            value={moment(this.state.selection, 'YYYY-MM-DD')}
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
             minDate={moment(this.props.today, 'YYYY-MM-DD')}
           ><List.Item arrow="horizontal">Book Date</List.Item>
