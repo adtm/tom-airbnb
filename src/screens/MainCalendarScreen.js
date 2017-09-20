@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import moment from 'moment';
+import axios from 'axios';
 
 import CalendarView from '../components/calendar_view'
 
 
 export default class MainCalendarScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      today: moment().format("YYYY-MM-DD"),
+      selection: moment().format("YYYY-MM-DD"),
+      lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
+      items: {}
+    };
+    // if you want to listen on navigator events, set this up
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+  }
+
   static navigatorButtons = {
     rightButtons: [
       {
@@ -33,21 +46,59 @@ export default class MainCalendarScreen extends Component {
     });
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      today: moment().format("YYYY-MM-DD"),
-      selection: moment().format("YYYY-MM-DD"),
-      lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD")
-    };
-    // if you want to listen on navigator events, set this up
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
   handleDaySelect = day => {
     this.setState({
       selection: day.dateString
     });
+  }
+
+  handleSubmit = (name, surname, date) => {
+    axios.post('http://localhost:3000/api/bookings/create', {
+      bookerName: name,
+      bookerSurname: surname,
+      date
+    }).then(savedBookings => {
+      const { date } = savedBookings.data;
+      Object.keys(this.state.items).forEach(key => {
+        if (key == date) {
+          savedBookings.data.bookings.map(booking => {
+            this.state.items[key].push({
+              name: 'Item for ' + booking.bookerName,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            })
+          })
+        }
+      });
+      this.setState({ items: this.state.items });
+      this.props.navigator.dismissModal({
+        animationType: 'slide-down',
+      });
+    }).catch(e => console.log(e))
+
+  }
+
+  loadItems = () => {
+    axios.get('http://localhost:3000/api/bookings/get')
+      .then(foundBookings => {
+        const { data } = foundBookings;
+        data.map(booking => {
+          const strTime = booking.date;
+          if (!this.state.items[strTime]) {
+            this.state.items[strTime] = [];
+            booking.bookings.map(oneBooking => {
+              this.state.items[strTime].push({
+                name: 'Item for ' + oneBooking.bookerName,
+                height: Math.max(50, Math.floor(Math.random() * 150))
+              });
+            })
+          }
+          this.setState({
+            items: this.state.items
+          });
+          console.log(this.state.items)
+        })
+      })
+      .catch(e => console.log(e))
   }
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -59,7 +110,8 @@ export default class MainCalendarScreen extends Component {
           passProps: {
             today: this.state.today,
             selection: this.state.selection,
-            lastDay: this.state.lastDay
+            lastDay: this.state.lastDay,
+            onSubmit: this.handleSubmit
           }, // simple serializable object that will pass as props to the modal (optional)
           navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
           animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
@@ -75,6 +127,8 @@ export default class MainCalendarScreen extends Component {
           today={this.state.today}
           lastDay={this.state.lastDay}
           onDaySelect={this.handleDaySelect}
+          items={this.state.items}
+          loadItems={this.loadItems}
         />
       </View>
     )
