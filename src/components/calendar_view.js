@@ -31,8 +31,6 @@ export default class CalendarView extends Component {
     );
   }
 
-  
-
   renderItem = (item) => {
     return (
       <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
@@ -46,13 +44,10 @@ export default class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
+    console.log(r1.name + " " + r2.name);
     return r1.name !== r2.name;
   }
 
-  timeToString = (time) => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
 }
 
 const styles = StyleSheet.create({

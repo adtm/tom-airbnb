@@ -52,17 +52,29 @@ export default class MainCalendarScreen extends Component {
     });
   }
 
-  handleSubmit = () => {
+  handleSubmit = (name, surname, date) => {
     axios.post('http://localhost:3000/api/bookings/create', {
-      bookerName: this.state.name,
-      bookerSurname: this.state.surname,
-      date: this.state.selection
+      bookerName: name,
+      bookerSurname: surname,
+      date
     }).then(savedBookings => {
-      this.loadItems();
+      const { date } = savedBookings.data;
+      Object.keys(this.state.items).forEach(key => {
+        if (key == date) {
+          savedBookings.data.bookings.map(booking => {
+            this.state.items[key].push({
+              name: 'Item for ' + booking.bookerName,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            })
+          })
+        }
+      });
+      this.setState({ items: this.state.items });
       this.props.navigator.dismissModal({
         animationType: 'slide-down',
       });
     }).catch(e => console.log(e))
+
   }
 
   loadItems = () => {
@@ -80,14 +92,12 @@ export default class MainCalendarScreen extends Component {
               });
             })
           }
+          this.setState({
+            items: this.state.items
+          });
         })
       })
       .catch(e => console.log(e))
-    const newItems = {};
-    Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
-    this.setState({
-      items: newItems
-    });
   }
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together

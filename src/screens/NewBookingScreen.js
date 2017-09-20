@@ -51,7 +51,12 @@ class NewBookingScreen extends Component {
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-
+  handleSubmit = () => {  
+    const { name, surname, selection } = this.state;
+    this.props.onSubmit(
+      name, surname, selection
+    );
+  }
   
   render() {
     const { getFieldProps } = this.props.form;
@@ -95,7 +100,7 @@ class NewBookingScreen extends Component {
           ><List.Item arrow="horizontal">Book Date</List.Item>
           </DatePicker>
         </List>
-        <Button style={{ margin: 10 }} type="primary" onClick={this.props.onSubmit}>Book</Button>
+        <Button style={{ margin: 10 }} type="primary" onClick={this.handleSubmit}>Book</Button>
       </View>
     );
   }
