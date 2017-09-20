@@ -45,6 +45,8 @@ function createBooking(req, res, next) {
     })
 }
 
+
+
 module.exports = {
   getBookings,
   createBooking
