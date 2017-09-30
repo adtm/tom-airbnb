@@ -4,7 +4,6 @@ import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import * as appActions from '../reducers/app/actions';
-
 import axios from 'axios';
 
 import CalendarView from '../components/calendar_view'
@@ -107,7 +106,6 @@ class MainCalendarScreen extends Component {
           this.setState({
             items: this.state.items
           });
-          console.log(this.state.items)
         })
       })
       .catch(e => console.log(e))
@@ -120,10 +118,10 @@ class MainCalendarScreen extends Component {
           screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
-            today: this.state.today,
-            selectionDate: this.state.selectionDate,
-            selectionTime: this.state.selectionTime,
-            lastDay: this.state.lastDay,
+            today: this.props.today,
+            selectionDate: this.props.selectionDate,
+            selectionTime: this.props.selectionTime,
+            lastDay: this.props.lastDay,
             onSubmit: this.handleSubmit
           }, // simple serializable object that will pass as props to the modal (optional)
           navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
@@ -137,8 +135,8 @@ class MainCalendarScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
-          today={this.state.today}
-          lastDay={this.state.lastDay}
+          today={this.props.today}
+          lastDay={this.props.lastDay}
           onDaySelect={this.handleDaySelect}
           onTimeSelect={this.handleTimeSelect}
           items={this.state.items}
@@ -151,11 +149,11 @@ class MainCalendarScreen extends Component {
 
 function mapStateToProps(state) {
   return {
-    today: state.today,
-    lastDay: state.lastDay,
-    selectionDate: state.selectionDate,
-    selectionTime: state.selectionTime,
+    today: state.app.today,
+    lastDay: state.app.lastDay,
+    selectionDate: state.app.selectionDate,
+    selectionTime: state.app.selectionTime,
   };
 }
-
+ 
 export default connect(mapStateToProps)(MainCalendarScreen);

@@ -13,7 +13,9 @@ const initialState = Immutable({
 export default function app(state = initialState, action = {}) {
   switch (action.type) {
     case types.GET_TIMES: {
-      return state;
+      return {
+        ...state
+      }
     }
     default:
       return state;
