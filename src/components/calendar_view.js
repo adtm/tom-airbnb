@@ -12,10 +12,6 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  onDaySelect = day => {
-    this.props.dispatch(appActions.setSelectionDate(day));
-  }
-
   render() {
     return (
       <Agenda
@@ -23,7 +19,7 @@ class CalendarView extends Component {
         loadItemsForMonth={this.props.loadItems}
         selected={this.props.selection}
         maxDate={this.props.lastDay}
-        onDayPress={this.props.onDaySelect}
+        onDayPress={this.props.setDay}
         renderItem={this.renderItem}
         renderEmptyDate={this.renderEmptyDate}
         rowHasChanged={this.rowHasChanged}
@@ -69,11 +65,17 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {
     today: state.app.today,
     lastDay: state.app.lastDay
   }
 }
 
-export default connect(mapStateToProps)(CalendarView);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setDay: day => dispatch(appActions.setSelectionDate(day))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarView);

@@ -126,3 +126,12 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewBookingScreen);
+
+/**
+ * BUGS
+ * change date on day press of different date
+ * time invalid when change
+ * date does not change on click
+ * time default to 20.17
+ * does not load on first try
+ */
