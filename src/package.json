@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "seamless-immutable": "^7.1.2"
+  }
+}

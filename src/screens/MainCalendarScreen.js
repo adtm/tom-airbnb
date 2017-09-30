@@ -52,7 +52,6 @@ export default class MainCalendarScreen extends Component {
       selectionDate: day.dateString
     });
   }
-
   handleTimeSelect = time => {
     this.setState({
       selectionTime: time.dateString
@@ -71,7 +70,6 @@ export default class MainCalendarScreen extends Component {
         if (key == date) {
           let arr = [];
           savedBookings.data.bookings.map(booking => {
-            console.log(booking.bookerTime)
             arr.push({
               name: booking.bookerName,
               surname: booking.bookerSurname,
@@ -99,7 +97,6 @@ export default class MainCalendarScreen extends Component {
           if (!this.state.items[strTime]) {
             this.state.items[strTime] = [];
             booking.bookings.map(oneBooking => {
-              console.log(oneBooking);
               this.state.items[strTime].push({
                 name: oneBooking.bookerName,
                 surname: oneBooking.bookerSurname,
@@ -111,6 +108,7 @@ export default class MainCalendarScreen extends Component {
           this.setState({
             items: this.state.items
           });
+          console.log(this.state.items)
         })
       })
       .catch(e => console.log(e))
