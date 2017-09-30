@@ -7,9 +7,30 @@ export function getDates() {
   }
 }
 
+export function setName(name) {
+  return {
+    type: types.SET_NAME,
+    name
+  }
+}
+
+export function setSurname(surname) {
+  return {
+    type: types.SET_SURNAME,
+    surname
+  }
+}
+
 export function setSelectionDate(date) {
   return {
     type: types.SET_SELECTION_DATE,
     date
+  }
+}
+
+export function setSelectionTime(time) {
+  return {
+    type: types.SET_SELECTION_TIME,
+    time
   }
 }

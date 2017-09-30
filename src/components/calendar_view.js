@@ -7,10 +7,14 @@ import {
   View,
   StyleSheet
 } from 'react-native';
-
 import { Agenda } from 'react-native-calendars';
 
+
 class CalendarView extends Component {
+
+  onDaySelect = day => {
+    this.props.dispatch(appActions.setSelectionDate(day));
+  }
 
   render() {
     return (
@@ -73,4 +77,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(CalendarView);
- 

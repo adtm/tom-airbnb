@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as appActions from '../reducers/app/actions';
 
+import * as appActions from '../reducers/app/actions';
 import { Text, View } from 'react-native';
 
 import axios from 'axios';
@@ -42,17 +42,6 @@ class MainCalendarScreen extends Component {
       to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
       animated: false, // does the toggle have transition animation or does it happen immediately (optional)
       drawUnderTabBar: true
-    });
-  }
-
-  handleDaySelect = day => {
-    this.setState({
-      selectionDate: day.dateString
-    });
-  }
-  handleTimeSelect = time => {
-    this.setState({
-      selectionTime: time.dateString
     });
   }
 
@@ -118,10 +107,6 @@ class MainCalendarScreen extends Component {
           screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
-            today: this.props.today,
-            selectionDate: this.props.selectionDate,
-            selectionTime: this.props.selectionTime,
-            lastDay: this.props.lastDay,
             onSubmit: this.handleSubmit
           }, // simple serializable object that will pass as props to the modal (optional)
           navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
@@ -135,8 +120,6 @@ class MainCalendarScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
-          onDaySelect={this.handleDaySelect}
-          onTimeSelect={this.handleTimeSelect}
           items={this.state.items}
           loadItems={this.loadItems}
         />
@@ -145,13 +128,5 @@ class MainCalendarScreen extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    today: state.app.today,
-    lastDay: state.app.lastDay,
-    selectionDate: state.app.selectionDate,
-    selectionTime: state.app.selectionTime,
-  };
-}
  
-export default connect(mapStateToProps)(MainCalendarScreen);
+export default MainCalendarScreen;

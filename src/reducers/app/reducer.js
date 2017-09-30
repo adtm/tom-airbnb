@@ -4,9 +4,13 @@ import moment from 'moment';
 
 const initialState = Immutable({
   today: moment().format("YYYY-MM-DD"),
+  lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
+
   selectionDate: moment().format("YYYY-MM-DD"),
   selectionTime: moment().format("HH:mm"),
-  lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
+
+  name: '',
+  surname: ''
 });
 
 
@@ -19,13 +23,25 @@ export default function app(state = initialState, action = {}) {
     }
     case types.SET_SELECTION_DATE: {
       return {
-        selectionDate: date,
+        selectionDate: action.date,
         ...state
       }
     }
     case types.SET_SELECTION_TIME: {
       return {
-        selectionTime: time,
+        selectionTime: action.time,
+        ...state
+      }
+    }
+    case types.SET_NAME: {
+      return {
+        name: action.name,
+        ...state
+      }
+    }
+    case types.SET_SURNAME: {
+      return {
+        surname: action.surname,
         ...state
       }
     }

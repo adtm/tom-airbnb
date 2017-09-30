@@ -6,7 +6,9 @@ import Button from 'antd-mobile/lib/button';
 import DatePicker from 'antd-mobile/lib/date-picker';
 import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
-import { createForm } from 'rc-form';
+
+import { connect } from 'react-redux';
+import * as appActions from '../reducers/app/actions';
 
 
 class NewBookingScreen extends Component {
@@ -38,14 +40,11 @@ class NewBookingScreen extends Component {
     super(props);
     this.state = {
       focused: false,
-      name: '',
-      surname: '',
-      selectionDate: this.props.selectionDate,
-      selectionTime: this.props.selectionTime
     };
     // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
+
 
   handleSubmit = () => {
     const { name, surname, selectionDate, selectionTime } = this.state;
@@ -54,14 +53,24 @@ class NewBookingScreen extends Component {
     );
   }
 
+  onTimeSelection = time => {
+    const selectedTime = moment(date).format("HH:mm");
+    this.props.dispatch(appActions.setSelectionTime(selectedTime));
+  }
+
+  onDateSelection = date => {
+    const selectedDate = moment(date).format("YYYY-MM-DD");
+    this.props.dispatch(appActions.setSelectionDate(selectedDate));
+  }
+
   render() {
-    const { getFieldProps } = this.props.form;
+    console.log(this.props);
     return (
       <View >
         <List renderHeader={() => 'Person information'}>
           <TextareaItem
             placeholder="Name"
-            value={this.state.name}
+            value={this.props.name}
             clear
             focused={this.state.focused}
             onFocus={() => {
@@ -69,12 +78,12 @@ class NewBookingScreen extends Component {
                 focused: false,
               });
             }}
-            onChange={name => this.setState({ name })}
+            onChange={name => this.props.setName(name)}
           />
           <TextareaItem
             placeholder="Surname"
-            value={this.state.surname}
-            onChange={surname => this.setState({ surname })}
+            value={this.props.surname}
+            onChange={surname => this.props.dispatch(appActions.setSurname(surname))}
             clear
           />
         </List>
@@ -84,9 +93,9 @@ class NewBookingScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
-            onChange={selectionDate => this.setState({ selectionDate: moment(selectionDate).format("YYYY-MM-DD")})}
+            onChange={this.onDateSelection}
             locale={enUs}
-            value={moment(this.state.selectionDate, 'YYYY-MM-DD')}
+            value={moment(this.props.selectionDate, 'YYYY-MM-DD')}
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
             minDate={moment(this.props.today, 'YYYY-MM-DD')}
           ><List.Item arrow="horizontal">Book Date</List.Item>
@@ -97,8 +106,8 @@ class NewBookingScreen extends Component {
             okText="OK"
             dismissText="Cancel"
             locale={enUs}
-            value={moment(this.state.selectionTime, 'HH:mm')}
-            onChange={selectionTime => this.setState({ selectionTime: moment(selectionTime).format("HH:mm")})}
+            value={moment(this.props.selectionTime, 'HH:mm')}
+            onChange={this.onTimeSelection}
           >
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
@@ -109,4 +118,21 @@ class NewBookingScreen extends Component {
   }
 }
 
-export default createForm()(NewBookingScreen);
+const mapStateToProps = state =>{
+  return {
+    today: state.app.today,
+    lastDay: state.app.lastDay,
+    selectionDate: state.app.selectionDate,
+    selectionTime: state.app.selectionTime,
+    name: state.app.name,
+    surname: state.app.surname
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      setName : name => dispatch(appActions.setName(name))       
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewBookingScreen);
