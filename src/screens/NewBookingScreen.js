@@ -97,7 +97,7 @@ class NewBookingScreen extends Component {
             okText="OK"
             dismissText="Cancel"
             locale={enUs}
-            value={moment(this.state.selectionDate, 'HH:mm')}
+            value={moment(this.state.selectionTime, 'HH:mm')}
             onChange={selectionTime => this.setState({ selectionTime: moment(selectionTime).format("HH:mm")})}
           >
             <List.Item arrow="horizontal">Book Time</List.Item>
