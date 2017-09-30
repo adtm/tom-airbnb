@@ -41,30 +41,17 @@ class NewBookingScreen extends Component {
     this.state = {
       focused: false,
     };
-    // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-
   handleSubmit = () => {
-    const { name, surname, selectionDate, selectionTime } = this.state;
+    const { name, surname, selectionDate, selectionTime } = this.props;
     this.props.onSubmit(
       name, surname, selectionDate, selectionTime
     );
   }
-
-  onTimeSelection = time => {
-    const selectedTime = moment(date).format("HH:mm");
-    this.props.dispatch(appActions.setSelectionTime(selectedTime));
-  }
-
-  onDateSelection = date => {
-    const selectedDate = moment(date).format("YYYY-MM-DD");
-    this.props.dispatch(appActions.setSelectionDate(selectedDate));
-  }
-
+ 
   render() {
-    console.log(this.props);
     return (
       <View >
         <List renderHeader={() => 'Person information'}>
@@ -93,7 +80,7 @@ class NewBookingScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
-            onChange={this.onDateSelection}
+            onChange={selectedDate => this.props.setDate(selectedDate)}
             locale={enUs}
             value={moment(this.props.selectionDate, 'YYYY-MM-DD')}
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
@@ -107,7 +94,7 @@ class NewBookingScreen extends Component {
             dismissText="Cancel"
             locale={enUs}
             value={moment(this.props.selectionTime, 'HH:mm')}
-            onChange={this.onTimeSelection}
+            onChange={selectedTime => this.props.setTime(selectedTime)}
           >
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
@@ -132,7 +119,9 @@ const mapStateToProps = state =>{
 const mapDispatchToProps = (dispatch) => {
   return {
       setName : name => dispatch(appActions.setName(name)),      
-      setSurname : surname => dispatch(appActions.setSurname(surname))       
+      setSurname : surname => dispatch(appActions.setSurname(surname)),
+      setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
+      setDate: date => dispatch(appActions.setSelectionTime(moment(date).format("YYYY-MM-DD"))),
   }
 }
 

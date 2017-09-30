@@ -22,16 +22,14 @@ export default function app(state = initialState, action = {}) {
       }
     }
     case types.SET_SELECTION_DATE: {
-      return {
+      return Object.assign({}, state, {
         selectionDate: action.date,
-        ...state
-      }
+      });
     }
     case types.SET_SELECTION_TIME: {
-      return {
+      return Object.assign({}, state, {
         selectionTime: action.time,
-        ...state
-      }
+      });
     }
     case types.SET_NAME: {
       return Object.assign({}, state, {
