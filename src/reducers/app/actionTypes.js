@@ -1,2 +1,4 @@
-export const INITIALIZED = 'example.app.INITIALIZED';
-export const ROOT_CHANGED = 'example.app.ROOT_CHANGED';
+export const INITIALIZED = 'INITIALIZED';
+export const ROOT_CHANGED = 'ROOT_CHANGED';
+
+export const GET_TIMES = 'GET_TIMES';

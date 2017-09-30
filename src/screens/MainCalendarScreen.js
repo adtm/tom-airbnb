@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
-import moment from 'moment';
+
+import { connect } from 'react-redux';
+
+import * as appActions from '../reducers/app/actions';
+
 import axios from 'axios';
 
 import CalendarView from '../components/calendar_view'
 
-
-export default class MainCalendarScreen extends Component {
+class MainCalendarScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      today: moment().format("YYYY-MM-DD"),
-      selectionDate: moment().format("YYYY-MM-DD"),
-      selectionTime: moment().format("HH:mm"),
-      lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
       items: {}
     };
     // if you want to listen on navigator events, set this up
@@ -149,3 +148,14 @@ export default class MainCalendarScreen extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    today: state.today,
+    lastDay: state.lastDay,
+    selectionDate: state.selectionDate,
+    selectionTime: state.selectionTime,
+  };
+}
+
+export default connect(mapStateToProps)(MainCalendarScreen);
