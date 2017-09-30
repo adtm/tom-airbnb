@@ -6,3 +6,10 @@ export function getDates() {
     data
   }
 }
+
+export function setSelectionDate(date) {
+  return {
+    type: types.SET_SELECTION_DATE,
+    date
+  }
+}

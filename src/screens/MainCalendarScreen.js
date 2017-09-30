@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as appActions from '../reducers/app/actions';
+
 import { Text, View } from 'react-native';
 
-import { connect } from 'react-redux';
-
-import * as appActions from '../reducers/app/actions';
 import axios from 'axios';
 
 import CalendarView from '../components/calendar_view'
@@ -135,8 +135,6 @@ class MainCalendarScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
-          today={this.props.today}
-          lastDay={this.props.lastDay}
           onDaySelect={this.handleDaySelect}
           onTimeSelect={this.handleTimeSelect}
           items={this.state.items}

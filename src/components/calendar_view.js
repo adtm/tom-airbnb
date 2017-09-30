@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as appActions from '../reducers/app/actions';
 import axios from 'axios';
 import {
   Text,
   View,
   StyleSheet
 } from 'react-native';
+
 import { Agenda } from 'react-native-calendars';
 
-
-export default class CalendarView extends Component {
+class CalendarView extends Component {
 
   render() {
     return (
@@ -62,3 +64,13 @@ const styles = StyleSheet.create({
     paddingTop: 30
   }
 });
+
+function mapStateToProps(state) {
+  return {
+    today: state.app.today,
+    lastDay: state.app.lastDay
+  }
+}
+
+export default connect(mapStateToProps)(CalendarView);
+ 

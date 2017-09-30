@@ -17,6 +17,18 @@ export default function app(state = initialState, action = {}) {
         ...state
       }
     }
+    case types.SET_SELECTION_DATE: {
+      return {
+        selectionDate: date,
+        ...state
+      }
+    }
+    case types.SET_SELECTION_TIME: {
+      return {
+        selectionTime: time,
+        ...state
+      }
+    }
     default:
       return state;
   }

@@ -1,1 +1,3 @@
 export const GET_TIMES = 'GET_TIMES';
+export const SET_SELECTION_DATE = 'SET_SELECTION_DATE';
+export const SET_SELECTION_TIME = 'SET_SELECTION_TIME';
