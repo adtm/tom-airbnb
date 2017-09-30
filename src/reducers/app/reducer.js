@@ -34,16 +34,14 @@ export default function app(state = initialState, action = {}) {
       }
     }
     case types.SET_NAME: {
-      return {
-        name: action.name,
-        ...state
-      }
+      return Object.assign({}, state, {
+        name: action.name
+      });
     }
     case types.SET_SURNAME: {
-      return {
-        surname: action.surname,
-        ...state
-      }
+      return Object.assign({}, state, {
+        surname: action.surname
+      });
     }
     default:
       return state;

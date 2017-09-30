@@ -83,7 +83,7 @@ class NewBookingScreen extends Component {
           <TextareaItem
             placeholder="Surname"
             value={this.props.surname}
-            onChange={surname => this.props.dispatch(appActions.setSurname(surname))}
+            onChange={surname => this.props.setSurname(surname)}
             clear
           />
         </List>
@@ -131,7 +131,8 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      setName : name => dispatch(appActions.setName(name))       
+      setName : name => dispatch(appActions.setName(name)),      
+      setSurname : surname => dispatch(appActions.setSurname(surname))       
   }
 }
 
