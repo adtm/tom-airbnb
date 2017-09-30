@@ -11,7 +11,8 @@ export default class MainCalendarScreen extends Component {
     super(props);
     this.state = {
       today: moment().format("YYYY-MM-DD"),
-      selection: moment().format("YYYY-MM-DD"),
+      selectionDate: moment().format("YYYY-MM-DD"),
+      selectionTime: moment().format("HH:mm"),
       lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
       items: {}
     };
@@ -48,14 +49,21 @@ export default class MainCalendarScreen extends Component {
 
   handleDaySelect = day => {
     this.setState({
-      selection: day.dateString
+      selectionDate: day.dateString
     });
   }
 
-  handleSubmit = (name, surname, date) => {
+  handleTimeSelect = time => {
+    this.setState({
+      selectionTime: time.dateString
+    });
+  }
+
+  handleSubmit = (name, surname, date, time) => {
     axios.post('http://localhost:3000/api/bookings/create', {
       bookerName: name,
       bookerSurname: surname,
+      bookerTime: time,
       date
     }).then(savedBookings => {
       const { date } = savedBookings.data;
@@ -63,8 +71,11 @@ export default class MainCalendarScreen extends Component {
         if (key == date) {
           let arr = [];
           savedBookings.data.bookings.map(booking => {
+            console.log(booking.bookerTime)
             arr.push({
-              name: 'Item for ' + booking.bookerName,
+              name: booking.bookerName,
+              surname: booking.bookerSurname,
+              time: booking.bookerTime,
               height: Math.max(50, Math.floor(Math.random() * 150))
             })
           });
@@ -88,8 +99,11 @@ export default class MainCalendarScreen extends Component {
           if (!this.state.items[strTime]) {
             this.state.items[strTime] = [];
             booking.bookings.map(oneBooking => {
+              console.log(oneBooking);
               this.state.items[strTime].push({
-                name: 'Item for ' + oneBooking.bookerName,
+                name: oneBooking.bookerName,
+                surname: oneBooking.bookerSurname,
+                time: oneBooking.bookerTime,
                 height: Math.max(50, Math.floor(Math.random() * 150))
               });
             })
@@ -97,7 +111,6 @@ export default class MainCalendarScreen extends Component {
           this.setState({
             items: this.state.items
           });
-          console.log(this.state.items)
         })
       })
       .catch(e => console.log(e))
@@ -111,7 +124,8 @@ export default class MainCalendarScreen extends Component {
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
             today: this.state.today,
-            selection: this.state.selection,
+            selectionDate: this.state.selectionDate,
+            selectionTime: this.state.selectionTime,
             lastDay: this.state.lastDay,
             onSubmit: this.handleSubmit
           }, // simple serializable object that will pass as props to the modal (optional)
@@ -129,6 +143,7 @@ export default class MainCalendarScreen extends Component {
           today={this.state.today}
           lastDay={this.state.lastDay}
           onDaySelect={this.handleDaySelect}
+          onTimeSelect={this.handleTimeSelect}
           items={this.state.items}
           loadItems={this.loadItems}
         />

@@ -9,13 +9,6 @@ import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { createForm } from 'rc-form';
 
 
-function formatDate(date) {
-  /* eslint no-confusing-arrow: 0 */
-  const pad = n => n < 10 ? `0${n}` : n;
-  const dateStr = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-  return dateStr
-}
-
 class NewBookingScreen extends Component {
   static navigatorButtons = {
     leftButtons: [
@@ -47,23 +40,18 @@ class NewBookingScreen extends Component {
       focused: false,
       name: '',
       surname: '',
-      selection: this.props.selection
+      selectionDate: this.props.selectionDate,
+      selectionTime: this.props.selectionTime
     };
     // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-  handleSubmit = () => {  
-    const { name, surname, selection } = this.state;
+  handleSubmit = () => {
+    const { name, surname, selectionDate, selectionTime } = this.state;
     this.props.onSubmit(
-      name, surname, selection
+      name, surname, selectionDate, selectionTime
     );
-  }
-  
-  onChange = date => {
-    this.setState({
-      selection: moment(date).format("YYYY-MM-DD")
-    })
   }
 
   render() {
@@ -72,7 +60,6 @@ class NewBookingScreen extends Component {
       <View >
         <List renderHeader={() => 'Person information'}>
           <TextareaItem
-            {...getFieldProps('control') }
             placeholder="Name"
             value={this.state.name}
             clear
@@ -97,12 +84,23 @@ class NewBookingScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
-            onChange={this.onChange}
+            onChange={selectionDate => this.setState({ selectionDate: moment(selectionDate).format("YYYY-MM-DD")})}
             locale={enUs}
-            value={moment(this.state.selection, 'YYYY-MM-DD')}
+            value={moment(this.state.selectionDate, 'YYYY-MM-DD')}
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
             minDate={moment(this.props.today, 'YYYY-MM-DD')}
           ><List.Item arrow="horizontal">Book Date</List.Item>
+          </DatePicker>
+          <DatePicker
+            mode="time"
+            format={val => val.format('HH:mm')}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            value={moment(this.state.selectionDate, 'HH:mm')}
+            onChange={selectionTime => this.setState({ selectionTime: moment(selectionTime).format("HH:mm")})}
+          >
+            <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
         <Button style={{ margin: 10 }} type="primary" onClick={this.handleSubmit}>Book</Button>

@@ -27,15 +27,13 @@ export default class CalendarView extends Component {
 
   renderItem = (item) => {
     return (
-      <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
+      <View style={[styles.item, { height: item.height }]}>
+        <Text>Name: {item.name} {item.surname}</Text>
+        <Text>Time: {item.time}</Text>
+      </View>
     );
   }
-
-  renderItem = (item) => {
-    return (
-      <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
-    );
-  }
+ 
 
   renderEmptyDate = () => {
     return (

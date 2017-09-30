@@ -530,6 +530,7 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* tombnbTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
+				C35454571F73D969009AF510 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -554,6 +555,14 @@
 				C3F6D7251F6DE29700CDAA86 /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C35454571F73D969009AF510 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				14C04F7C3C4942EA865C8835 /* libReactNativeNavigation.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		C380A86C1F6E672F00974B20 /* Products */ = {

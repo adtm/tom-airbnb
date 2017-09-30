@@ -8,13 +8,13 @@ function getBookings(req, res, next) {
 }
 
 function createBooking(req, res, next) {
-  const { bookerName, bookerSurname, date } = req.body;
+  const { bookerName, bookerSurname, bookerTime, date } = req.body;
 
   Day.findOne({ date: date })
     .then(foundDay => {
       if (!foundDay) {
         const booking = new Booking({
-          bookerName, bookerSurname
+          bookerName, bookerSurname, bookerTime
         });
         booking.save()
           .then(savedBooking => {
@@ -29,7 +29,7 @@ function createBooking(req, res, next) {
           .catch(e => res.json('404'));
       } else {
         const booking = new Booking({
-          bookerName, bookerSurname
+          bookerName, bookerSurname, bookerTime
         });
         booking.save()
           .then(savedBooking => {
