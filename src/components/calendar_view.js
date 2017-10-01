@@ -11,13 +11,11 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  componentDidMount() {
-    axios.get('http://localhost:3000/api/bookings/get')
-    .then(foundBookings => {
-      this.props.getBookings(foundBookings);
-    })
-    .catch(e => console.log(e))
+  componentWillReceiveProps(nextProps) {
+ 
+    console.log(this.props.items); 
   }
+
 
   render() {
     return (
@@ -41,7 +39,7 @@ class CalendarView extends Component {
       </View>
     );
   }
- 
+
   renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
@@ -71,19 +69,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
-    items: state.app.items
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setDay: date => dispatch(appActions.setSelectionDate(date.dateString)),
-    getBookings: data => dispatch(appActions.getBookings(data)),
   }
 }
- 
+
 export default connect(mapStateToProps, mapDispatchToProps)(CalendarView);

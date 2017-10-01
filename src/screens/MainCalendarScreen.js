@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as appActions from '../reducers/app/actions';
 import { View } from 'react-native';
 import CalendarView from '../components/calendar_view'
+import axios from 'axios';
 
 class MainCalendarScreen extends Component {
   constructor(props) {
@@ -24,6 +27,14 @@ class MainCalendarScreen extends Component {
     ]
   };
 
+  componentDidMount() {
+    axios.get('http://localhost:3000/api/bookings/get')
+      .then(foundBookings => {
+        this.props.getBookings(foundBookings);
+      })
+      .catch(e => console.log(e))
+  }
+
   /**
    * PR waiting about tabs not hiding
    */
@@ -34,6 +45,21 @@ class MainCalendarScreen extends Component {
       animated: false, // does the toggle have transition animation or does it happen immediately (optional)
       drawUnderTabBar: true
     });
+  }
+
+  handleSubmit = (name, surname, selectionDate, selectionTime) => {
+    // const { name, surname, selectionDate, selectionTime } = this.props;
+    axios.post('http://localhost:3000/api/bookings/create', {
+      bookerName: name,
+      bookerSurname: surname,
+      bookerTime: selectionTime,
+      date: selectionDate
+    }).then(savedBookings => {
+      this.props.createBooking(savedBookings);
+      this.props.navigator.dismissModal({
+        animationType: 'slide-down',
+      });
+    }).catch(e => console.log(e))
   }
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
@@ -55,10 +81,25 @@ class MainCalendarScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <CalendarView/>
+        <CalendarView
+          items={this.props.items}
+        />
       </View>
     )
   }
 }
 
-export default MainCalendarScreen;
+const mapStateToProps = state => {
+  return {
+    items: state.app.items
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBookings: data => dispatch(appActions.getBookings(data)),
+    createBooking: data => dispatch(appActions.createBooking(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainCalendarScreen);

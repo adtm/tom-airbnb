@@ -18,11 +18,6 @@ const initialState =  {
 
 export default function app(state = initialState, action = {}) {
   switch (action.type) {
-    // case types.GET_TIMES: {
-    //   return {
-    //     ...state
-    //   }
-    // }
     case types.SET_SELECTION_DATE: {
       return Object.assign({}, state, {
         selectionDate: action.date,
@@ -64,29 +59,18 @@ export default function app(state = initialState, action = {}) {
         items: dateArr
       }); 
     }
-    // case types.CREATE_BOOKING: {
-    //   const { date } = action.savedBookings;
-    //   Object.keys(state.items).forEach(key => {
-    //     if (key == date) {
-    //       let arr = [];
-    //       action.savedBookings.data.bookings.map(booking => {
-    //         arr.push({
-    //           name: booking.bookerName,
-    //           surname: booking.bookerSurname,
-    //           time: booking.bookerTime,
-    //           height: Math.max(50, Math.floor(Math.random() * 150))
-    //         })
-    //       });
-    //       state.items[key] = arr;
-    //     }
-    //     Object.assign({}, state, {
-    //       items: state.items
-    //     });
-    //   });
-    //   return {
-    //     ...state
-    //   }
-    // }
+    case types.CREATE_BOOKING: {
+      const { date } = action.savedBookings.data;
+      let dateArr = state.items;
+      Object.keys(dateArr).forEach(key => {
+        if (key == date) {
+          dateArr[key] = action.savedBookings.data.bookings;
+        }
+      });
+      return Object.assign({}, state, {
+        items: dateArr
+      });
+    }
     default:
       return state;
   }
