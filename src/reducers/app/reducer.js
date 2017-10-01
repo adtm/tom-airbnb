@@ -2,7 +2,7 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 import moment from 'moment';
 
-const initialState = Immutable({
+const initialState =  {
   today: moment().format("YYYY-MM-DD"),
   lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
 
@@ -10,8 +10,10 @@ const initialState = Immutable({
   selectionTime: moment().format("HH:mm"),
 
   name: '',
-  surname: ''
-});
+  surname: '',
+
+  items: {}
+};
 
 
 export default function app(state = initialState, action = {}) {
@@ -40,6 +42,29 @@ export default function app(state = initialState, action = {}) {
       return Object.assign({}, state, {
         surname: action.surname
       });
+    }
+    case types.GET_BOOKINGS: {
+      const { data } = action.foundBookings;
+      data.map(booking => {
+        const strTime = booking.date;
+        if (!state.items[strTime]) {
+          state.items[strTime] = [];
+          booking.bookings.map(oneBooking => {
+            state.items[strTime].push({
+              name: oneBooking.bookerName,
+              surname: oneBooking.bookerSurname,
+              time: oneBooking.bookerTime,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            });
+          })
+        }
+        Object.assign({}, state, {
+          itmes: state.items
+        });
+      });
+      return {
+        ...state
+      }
     }
     default:
       return state;

@@ -80,7 +80,7 @@ class NewBookingScreen extends Component {
             format={val => val.format('YYYY-MM-DD')}
             okText="OK"
             dismissText="Cancel"
-            onChange={selectedDate => this.props.setDate(selectedDate)}
+            onChange={day => this.props.setDate(day)}
             locale={enUs}
             value={moment(this.props.selectionDate, 'YYYY-MM-DD')}
             maxDate={moment(this.props.lastDay, 'YYYY-MM-DD')}
@@ -121,17 +121,8 @@ const mapDispatchToProps = (dispatch) => {
       setName : name => dispatch(appActions.setName(name)),      
       setSurname : surname => dispatch(appActions.setSurname(surname)),
       setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
-      setDate: date => dispatch(appActions.setSelectionTime(moment(date).format("YYYY-MM-DD"))),
+      setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewBookingScreen);
-
-/**
- * BUGS
- * change date on day press of different date
- * time invalid when change
- * date does not change on click
- * time default to 20.17
- * does not load on first try
- */

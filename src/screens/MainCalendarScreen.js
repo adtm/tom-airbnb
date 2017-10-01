@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import * as appActions from '../reducers/app/actions';
+ 
 import { Text, View } from 'react-native';
 
 import axios from 'axios';
@@ -52,6 +52,7 @@ class MainCalendarScreen extends Component {
       bookerTime: time,
       date
     }).then(savedBookings => {
+      // dispatch
       const { date } = savedBookings.data;
       Object.keys(this.state.items).forEach(key => {
         if (key == date) {
@@ -75,31 +76,6 @@ class MainCalendarScreen extends Component {
 
   }
 
-  loadItems = () => {
-    axios.get('http://localhost:3000/api/bookings/get')
-      .then(foundBookings => {
-        const { data } = foundBookings;
-        data.map(booking => {
-          const strTime = booking.date;
-          if (!this.state.items[strTime]) {
-            this.state.items[strTime] = [];
-            booking.bookings.map(oneBooking => {
-              this.state.items[strTime].push({
-                name: oneBooking.bookerName,
-                surname: oneBooking.bookerSurname,
-                time: oneBooking.bookerTime,
-                height: Math.max(50, Math.floor(Math.random() * 150))
-              });
-            })
-          }
-          this.setState({
-            items: this.state.items
-          });
-        })
-      })
-      .catch(e => console.log(e))
-  }
-
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
@@ -121,12 +97,10 @@ class MainCalendarScreen extends Component {
       <View style={{ flex: 1 }}>
         <CalendarView
           items={this.state.items}
-          loadItems={this.loadItems}
         />
       </View>
     )
   }
 }
 
- 
-export default MainCalendarScreen;
+export default (MainCalendarScreen);

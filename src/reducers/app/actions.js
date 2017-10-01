@@ -34,3 +34,10 @@ export function setSelectionTime(time) {
     time
   }
 }
+
+export function getBookings(foundBookings) {
+  return {
+    type: types.GET_BOOKINGS,
+    foundBookings
+  }
+}
