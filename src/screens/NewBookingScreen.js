@@ -6,7 +6,7 @@ import Button from 'antd-mobile/lib/button';
 import DatePicker from 'antd-mobile/lib/date-picker';
 import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
-
+import axios from 'axios';
 import { connect } from 'react-redux';
 import * as appActions from '../reducers/app/actions';
 
@@ -26,6 +26,14 @@ class NewBookingScreen extends Component {
     ]
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: false,
+    };
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+  }
+
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'back') { // this is the same id field from the static navigatorButtons definition
@@ -36,21 +44,23 @@ class NewBookingScreen extends Component {
     }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      focused: false,
-    };
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
   handleSubmit = () => {
     const { name, surname, selectionDate, selectionTime } = this.props;
-    this.props.onSubmit(
-      name, surname, selectionDate, selectionTime
-    );
+    axios.post('http://localhost:3000/api/bookings/create', {
+      bookerName: name,
+      bookerSurname: surname,
+      bookerTime: selectionTime,
+      date:selectionDate
+    }).then(savedBookings => {
+      this.props.createBooking(savedBookings);
+      // this.setState({ items: this.state.items });
+      this.props.navigator.dismissModal({
+        animationType: 'slide-down',
+      });
+    }).catch(e => console.log(e))
   }
- 
+
+
   render() {
     return (
       <View >
@@ -122,6 +132,7 @@ const mapDispatchToProps = (dispatch) => {
       setSurname : surname => dispatch(appActions.setSurname(surname)),
       setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
       setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
+      createBooking: data => dispatch(appActions.createBooking(data)),
   }
 }
 

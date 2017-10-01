@@ -25,7 +25,6 @@ class CalendarView extends Component {
         this.setState({ items: this.props.items });
       })
       .catch(e => console.log(e))
-    
   }
 
   render() {
@@ -52,7 +51,6 @@ class CalendarView extends Component {
     );
   }
  
-
   renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
@@ -96,5 +94,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
  
-
 export default connect(mapStateToProps, mapDispatchToProps)(CalendarView);

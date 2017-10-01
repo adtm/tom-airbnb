@@ -41,3 +41,10 @@ export function getBookings(foundBookings) {
     foundBookings
   }
 }
+
+export function createBooking(savedBookings) {
+  return {
+    type: types.CREATE_BOOKING,
+    savedBookings
+  }
+}

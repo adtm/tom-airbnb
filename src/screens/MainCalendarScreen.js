@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as appActions from '../reducers/app/actions';
- 
-import { Text, View } from 'react-native';
-
-import axios from 'axios';
-
+import { View } from 'react-native';
 import CalendarView from '../components/calendar_view'
 
 class MainCalendarScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      items: {}
-    };
     // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
@@ -45,37 +36,6 @@ class MainCalendarScreen extends Component {
     });
   }
 
-  handleSubmit = (name, surname, date, time) => {
-    axios.post('http://localhost:3000/api/bookings/create', {
-      bookerName: name,
-      bookerSurname: surname,
-      bookerTime: time,
-      date
-    }).then(savedBookings => {
-      // dispatch
-      const { date } = savedBookings.data;
-      Object.keys(this.state.items).forEach(key => {
-        if (key == date) {
-          let arr = [];
-          savedBookings.data.bookings.map(booking => {
-            arr.push({
-              name: booking.bookerName,
-              surname: booking.bookerSurname,
-              time: booking.bookerTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            })
-          });
-          this.state.items[key] = arr;
-        }
-      });
-      this.setState({ items: this.state.items });
-      this.props.navigator.dismissModal({
-        animationType: 'slide-down',
-      });
-    }).catch(e => console.log(e))
-
-  }
-
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
@@ -95,12 +55,10 @@ class MainCalendarScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <CalendarView
-          items={this.state.items}
-        />
+        <CalendarView/>
       </View>
     )
   }
 }
 
-export default (MainCalendarScreen);
+export default MainCalendarScreen;

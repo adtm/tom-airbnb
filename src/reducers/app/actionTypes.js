@@ -5,3 +5,4 @@ export const SET_SURNAME = 'SET_SURNAME';
 export const SET_NAME = 'SET_NAME';
 
 export const GET_BOOKINGS = 'GET_BOOKINGS';
+export const CREATE_BOOKING = 'CREATE_BOOKING';

@@ -59,7 +59,30 @@ export default function app(state = initialState, action = {}) {
           })
         }
         Object.assign({}, state, {
-          itmes: state.items
+          items: state.items
+        });
+      });
+      return {
+        ...state
+      }
+    }
+    case types.CREATE_BOOKING: {
+      const { date } = action.savedBookings;
+      Object.keys(state.items).forEach(key => {
+        if (key == date) {
+          let arr = [];
+          savedBookings.data.bookings.map(booking => {
+            arr.push({
+              name: booking.bookerName,
+              surname: booking.bookerSurname,
+              time: booking.bookerTime,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            })
+          });
+          state.items[key] = arr;
+        }
+        Object.assign({}, state, {
+          items: state.items
         });
       });
       return {
