@@ -13,15 +13,19 @@ class CalendarView extends Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      items: {}
+    }
   }
 
   loadItems = () => {
     axios.get('http://localhost:3000/api/bookings/get')
       .then(foundBookings => {
         this.props.getBookings(foundBookings);
+        this.setState({ items: this.props.items });
       })
       .catch(e => console.log(e))
-      console.log(this.props);
+    
   }
 
   render() {
