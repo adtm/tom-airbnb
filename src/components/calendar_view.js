@@ -11,27 +11,18 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-      items: {}
-    }
-  }
-
-  loadItems = () => {
+  componentDidMount() {
     axios.get('http://localhost:3000/api/bookings/get')
-      .then(foundBookings => {
-        this.props.getBookings(foundBookings);
-        this.setState({ items: this.props.items });
-      })
-      .catch(e => console.log(e))
+    .then(foundBookings => {
+      this.props.getBookings(foundBookings);
+    })
+    .catch(e => console.log(e))
   }
 
   render() {
     return (
       <Agenda
         items={this.props.items}
-        loadItemsForMonth={this.loadItems}
         selected={this.props.today}
         maxDate={this.props.lastDay}
         onDayPress={this.props.setDay}
@@ -80,6 +71,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,

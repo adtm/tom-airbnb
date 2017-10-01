@@ -53,7 +53,6 @@ class NewBookingScreen extends Component {
       date:selectionDate
     }).then(savedBookings => {
       this.props.createBooking(savedBookings);
-      // this.setState({ items: this.state.items });
       this.props.navigator.dismissModal({
         animationType: 'slide-down',
       });
