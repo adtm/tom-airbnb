@@ -123,7 +123,6 @@ const mapStateToProps = state => {
     selectionTime: state.app.selectionTime,
     name: state.app.name,
     surname: state.app.surname,
-    items: state.app.items
   };
 }
 

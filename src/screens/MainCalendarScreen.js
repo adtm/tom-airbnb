@@ -27,14 +27,6 @@ class MainCalendarScreen extends Component {
     ]
   };
 
-  componentDidMount() {
-    axios.get('http://localhost:3000/api/bookings/get')
-      .then(foundBookings => {
-        this.props.getBookings(foundBookings);
-      })
-      .catch(e => console.log(e))
-  }
-
   /**
    * PR waiting about tabs not hiding
    */
@@ -69,23 +61,10 @@ class MainCalendarScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
-          items={this.props.items}
         />
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    items: state.app.items
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getBookings: data => dispatch(appActions.getBookings(data)), 
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainCalendarScreen);
+export default MainCalendarScreen;

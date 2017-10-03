@@ -11,6 +11,14 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
+  componentDidMount() {
+    axios.get('http://localhost:3000/api/bookings/get')
+      .then(foundBookings => {
+        this.props.getBookings(foundBookings);
+      })
+      .catch(e => console.log(e))
+  }
+
   render() { 
     return (
       <Agenda
@@ -74,6 +82,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setDay: date => dispatch(appActions.setSelectionDate(date.dateString)),
+    getBookings: data => dispatch(appActions.getBookings(data)), 
   }
 }
 
