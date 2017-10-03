@@ -37,22 +37,27 @@ class NewBookingScreen extends Component {
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'back') { // this is the same id field from the static navigatorButtons definition
-        this.props.navigator.dismissModal({
+        this.props.navigator.pop({
           animationType: 'slide-down' // 'none' / 'slide-down' , dismiss animation for the modal (optional, default 'slide-down')
         });
       }
     }
   }
 
-  handleSubmit = () => {
-    this.props.onSubmit(
-      this.props.name,
-      this.props.surname,
-      this.props.selectionDate,
-      this.props.selectionTime
-    );
+  onSubmit = (name, surname, selectionDate, selectionTime) => {
+    axios.post('http://localhost:3000/api/bookings/create', {
+      bookerName: name,
+      bookerSurname: surname,
+      bookerTime: selectionTime,
+      date: selectionDate
+    }).then(savedBookings => {
+      this.props.createBooking(savedBookings);
+      this.props.navigator.pop({
+        animationType: 'slide-down',
+      });
+    }).catch(e => console.log(e))
   }
-
+  
   render() {
     return (
       <View >
@@ -101,29 +106,34 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
-        <Button style={{ margin: 10 }} type="primary" onClick={this.handleSubmit}>Book</Button>
+        <Button style={{ margin: 10 }} type="primary" onClick={() => this.onSubmit(this.props.name,
+          this.props.surname,
+          this.props.selectionDate,
+          this.props.selectionTime)}>Book</Button>
       </View>
     );
   }
 }
 
-const mapStateToProps = state =>{
+const mapStateToProps = state => {
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
     selectionDate: state.app.selectionDate,
     selectionTime: state.app.selectionTime,
     name: state.app.name,
-    surname: state.app.surname
+    surname: state.app.surname,
+    items: state.app.items
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      setName : name => dispatch(appActions.setName(name)),      
-      setSurname : surname => dispatch(appActions.setSurname(surname)),
-      setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
-      setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
+    setName: name => dispatch(appActions.setName(name)),
+    setSurname: surname => dispatch(appActions.setSurname(surname)),
+    setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
+    setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
+    createBooking: data => dispatch(appActions.createBooking(data))
   }
 }
 

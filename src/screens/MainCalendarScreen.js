@@ -47,24 +47,12 @@ class MainCalendarScreen extends Component {
     });
   }
 
-  handleSubmit = (name, surname, selectionDate, selectionTime) => {
-    axios.post('http://localhost:3000/api/bookings/create', {
-      bookerName: name,
-      bookerSurname: surname,
-      bookerTime: selectionTime,
-      date: selectionDate
-    }).then(savedBookings => {
-      this.props.createBooking(savedBookings);
-      this.props.navigator.dismissModal({
-        animationType: 'slide-down',
-      });
-    }).catch(e => console.log(e))
-  }
+  
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
-        this.props.navigator.showModal({
+        this.props.navigator.push({
           screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
@@ -96,9 +84,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getBookings: data => dispatch(appActions.getBookings(data)),
-    createBooking: data => dispatch(appActions.createBooking(data)),
-    getDates: (name, surname) => dispatch(appActions.getDates(name, surname))
+    getBookings: data => dispatch(appActions.getBookings(data)), 
   }
 }
 

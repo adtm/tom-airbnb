@@ -11,10 +11,10 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  render() {
+  render() { 
     return (
       <Agenda
-        items={this.props.items}
+        items={this.props.items} 
         selected={this.props.today}
         maxDate={this.props.lastDay}
         onDayPress={this.props.setDay}
@@ -41,6 +41,7 @@ class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
+    console.log('hit')
     return true;
   }
 
@@ -63,11 +64,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => {
-  // console.log(state);
-  // console.log(ownProps)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
+    items: state.app.items
   }
 }
 

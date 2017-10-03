@@ -2,7 +2,7 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 import moment from 'moment';
 
-const initialState =  {
+const initialState =  Immutable({
   today: moment().format("YYYY-MM-DD"),
   lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
 
@@ -13,32 +13,36 @@ const initialState =  {
   surname: '',
 
   items: {}
-};
+});
 
 
 export default function app(state = initialState, action = {}) {
   switch (action.type) {
     case types.SET_SELECTION_DATE: {
-      return Object.assign({}, state, {
-        selectionDate: action.date,
-      });
+      return {
+        ...state,
+        selectionDate: action.date
+      }
     }
     case types.SET_SELECTION_TIME: {
-      return Object.assign({}, state, {
-        selectionTime: action.time,
-      });
+      return {
+        ...state,
+        selectionTime: action.time
+      }
     }
     case types.SET_NAME: {
-      return Object.assign({}, state, {
+      return {
+        ...state,
         name: action.name
-      });
+      }
     }
     case types.SET_SURNAME: {
-      return Object.assign({}, state, {
+      return {
+        ...state,
         surname: action.surname
-      });
+      }
     }
-    case types.GET_BOOKINGS: { 
+    case types.GET_BOOKINGS: {
       const { data } = action.foundBookings;
       let dateArr = {};
       data.map(booking => {
@@ -55,21 +59,37 @@ export default function app(state = initialState, action = {}) {
           })
         }
       });
-      return Object.assign({}, state, {
-        items: dateArr
-      }); 
-    }
-    case types.CREATE_BOOKING: {
-      const { date } = action.savedBookings.data;
-      let dateArr = state.items;
-      Object.keys(dateArr).forEach(key => {
-        if (key == date) {
-          dateArr[key] = action.savedBookings.data.bookings;
-        }
-      });
       return {
         ...state,
         items: dateArr
+      }; 
+    }
+    case types.CREATE_BOOKING: {
+      const { date , bookings } = action.savedBookings.data;
+      let dateArr = state.items;
+      Object.keys(dateArr).forEach(key => {
+        if (key == date) {
+          dateArr[key] = [];
+          bookings.map(oneBooking => {
+            dateArr[key].push({
+              name: oneBooking.bookerName,
+              surname: oneBooking.bookerSurname,
+              time: oneBooking.bookerTime,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            });
+          })
+        }
+      });
+
+      console.log(dateArr)
+      return {
+        ...state,
+        items: dateArr
+      };
+    }
+    case types.GET_TIMES: {
+      return {
+        ...state
       }
     }
     default:
