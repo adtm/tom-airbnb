@@ -59,12 +59,6 @@ export default function app(state = initialState, action = {}) {
         items: dateArr
       }); 
     }
-    case types.GET_TIMES: {
-      return Object.assign({}, state, {
-        name: action.name,
-        surname: action.surname
-      }); 
-    }
     case types.CREATE_BOOKING: {
       const { date } = action.savedBookings.data;
       let dateArr = state.items;
@@ -73,9 +67,10 @@ export default function app(state = initialState, action = {}) {
           dateArr[key] = action.savedBookings.data.bookings;
         }
       });
-      return Object.assign({}, state, {
+      return {
+        ...state,
         items: dateArr
-      });
+      }
     }
     default:
       return state;

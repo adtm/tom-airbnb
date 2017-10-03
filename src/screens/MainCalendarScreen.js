@@ -55,7 +55,6 @@ class MainCalendarScreen extends Component {
       date: selectionDate
     }).then(savedBookings => {
       this.props.createBooking(savedBookings);
-      this.props.getDates('',''); 
       this.props.navigator.dismissModal({
         animationType: 'slide-down',
       });
@@ -79,7 +78,6 @@ class MainCalendarScreen extends Component {
   }
 
   render() {
-    console.log('hit')
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
@@ -90,7 +88,7 @@ class MainCalendarScreen extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     items: state.app.items
   }
