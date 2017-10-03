@@ -1,9 +1,10 @@
 import * as types from './actionTypes';
 
-export function getDates() {
+export function getDates(name, surname) {
   return {
     type: types.GET_TIMES,
-    data
+    name,
+    surname
   }
 }
 

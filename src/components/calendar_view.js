@@ -11,10 +11,12 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  componentWillReceiveProps(nextProps) {
- 
-    console.log(this.props.items); 
+  shouldComponentUpdate(nextProps) {
+    console.log(nextProps);
+    console.log(this.props);
+    return true;
   }
+
 
 
   render() {
@@ -47,7 +49,7 @@ class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name;
+    return true;
   }
 
 }

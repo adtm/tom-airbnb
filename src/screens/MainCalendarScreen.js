@@ -38,7 +38,7 @@ class MainCalendarScreen extends Component {
   /**
    * PR waiting about tabs not hiding
    */
-  componentWilMount() {
+  componentWillMount() {
     this.props.navigator.toggleTabs({
       tabBarHidden: true,
       to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
@@ -48,7 +48,6 @@ class MainCalendarScreen extends Component {
   }
 
   handleSubmit = (name, surname, selectionDate, selectionTime) => {
-    // const { name, surname, selectionDate, selectionTime } = this.props;
     axios.post('http://localhost:3000/api/bookings/create', {
       bookerName: name,
       bookerSurname: surname,
@@ -56,6 +55,7 @@ class MainCalendarScreen extends Component {
       date: selectionDate
     }).then(savedBookings => {
       this.props.createBooking(savedBookings);
+      this.props.getDates('',''); 
       this.props.navigator.dismissModal({
         animationType: 'slide-down',
       });
@@ -79,6 +79,7 @@ class MainCalendarScreen extends Component {
   }
 
   render() {
+    console.log('hit')
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
@@ -98,7 +99,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getBookings: data => dispatch(appActions.getBookings(data)),
-    createBooking: data => dispatch(appActions.createBooking(data))
+    createBooking: data => dispatch(appActions.createBooking(data)),
+    getDates: (name, surname) => dispatch(appActions.getDates(name, surname))
   }
 }
 

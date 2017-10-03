@@ -38,7 +38,7 @@ export default function app(state = initialState, action = {}) {
         surname: action.surname
       });
     }
-    case types.GET_BOOKINGS: {
+    case types.GET_BOOKINGS: { 
       const { data } = action.foundBookings;
       let dateArr = {};
       data.map(booking => {
@@ -57,6 +57,12 @@ export default function app(state = initialState, action = {}) {
       });
       return Object.assign({}, state, {
         items: dateArr
+      }); 
+    }
+    case types.GET_TIMES: {
+      return Object.assign({}, state, {
+        name: action.name,
+        surname: action.surname
       }); 
     }
     case types.CREATE_BOOKING: {
