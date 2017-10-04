@@ -48,15 +48,12 @@ export default function app(state = initialState, action = {}) {
        bookings: action.bookings
       }; 
     }
-
     case types.CREATE_BOOKING: {
       const newBookings = state.bookings;
       return {
         ...state,
         bookings: newBookings.map(b => {
           if (b.date == action.booking.date) {
-            console.log(b);
-            console.log(action.booking);
             b.bookings = action.booking.bookings;
           }
           return b;

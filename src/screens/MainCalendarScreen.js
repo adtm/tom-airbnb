@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as appActions from '../reducers/app/actions';
+import * as actions from '../reducers/app/actions';
 import { View } from 'react-native';
-import CalendarView from '../components/calendar_view'
-import axios from 'axios';
+import CalendarView from '../components/calendar_view';
 
 class MainCalendarScreen extends Component {
+
   constructor(props) {
     super(props);
-    
     this.state = {
       bookings: {}
     };
@@ -55,7 +54,6 @@ class MainCalendarScreen extends Component {
       this.setState({ bookings });
     });
   }
-
 
   /**
    * PR waiting about tabs not hiding
@@ -112,12 +110,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchBookings: () => dispatch(appActions.fetchBookings()),
-    createBooking: (name, surname, selectionTime, selectionDate) => 
-    dispatch(appActions.createBooking(name, surname, selectionTime, selectionDate))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainCalendarScreen);
+export default connect(
+  mapStateToProps, 
+  { ...actions }
+)(MainCalendarScreen);

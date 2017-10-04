@@ -6,9 +6,8 @@ import Button from 'antd-mobile/lib/button';
 import DatePicker from 'antd-mobile/lib/date-picker';
 import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import * as appActions from '../reducers/app/actions';
+import * as actions from '../reducers/app/actions';
 
 
 class NewBookingScreen extends Component {
@@ -118,10 +117,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setName: name => dispatch(appActions.setName(name)),
-    setSurname: surname => dispatch(appActions.setSurname(surname)),
-    setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
-    setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
+    setName: name => dispatch(actions.setName(name)),
+    setSurname: surname => dispatch(actions.setSurname(surname)),
+    setTime: time => dispatch(actions.setSelectionTime(moment(time).format("HH:mm"))),
+    setDate: date => dispatch(actions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
   }
 }
 
