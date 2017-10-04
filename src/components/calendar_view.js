@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as appActions from '../reducers/app/actions';
 import axios from 'axios';
 import {
   Text,
@@ -7,17 +9,16 @@ import {
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 
-
-export default class CalendarView extends Component {
+class CalendarView extends Component {
 
   render() {
+    console.log(this.props.bookings)
     return (
       <Agenda
-        items={this.props.items}
-        loadItemsForMonth={this.props.loadItems}
-        selected={this.props.selection}
+        items={this.props.bookings}
+        selected={this.props.today}
         maxDate={this.props.lastDay}
-        onDayPress={this.props.onDaySelect}
+        onDayPress={this.props.setDay}
         renderItem={this.renderItem}
         renderEmptyDate={this.renderEmptyDate}
         rowHasChanged={this.rowHasChanged}
@@ -33,7 +34,6 @@ export default class CalendarView extends Component {
       </View>
     );
   }
- 
 
   renderEmptyDate = () => {
     return (
@@ -42,7 +42,7 @@ export default class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name;
+    return true;
   }
 
 }
@@ -62,3 +62,18 @@ const styles = StyleSheet.create({
     paddingTop: 30
   }
 });
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    today: state.app.today,
+    lastDay: state.app.lastDay,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)), 
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarView);

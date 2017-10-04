@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-import moment from 'moment';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import * as actions from '../reducers/app/actions';
+import { View } from 'react-native';
+import CalendarView from '../components/calendar_view';
 
-import CalendarView from '../components/calendar_view'
+class MainCalendarScreen extends Component {
 
-
-export default class MainCalendarScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      today: moment().format("YYYY-MM-DD"),
-      selectionDate: moment().format("YYYY-MM-DD"),
-      selectionTime: moment().format("HH:mm"),
-      lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
-      items: {}
+      bookings: {}
     };
-    // if you want to listen on navigator events, set this up
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
@@ -35,10 +29,36 @@ export default class MainCalendarScreen extends Component {
     ]
   };
 
+  componentDidMount() {
+    this.getBookings();
+  }
+
+  getBookings() {
+    this.props.fetchBookings()
+    .then(() => {
+      let bookings = {};
+      this.props.bookings.map(booking => {
+        const strTime = booking.date;
+        if (!this.props.bookings[strTime]) {
+          bookings[strTime] = [];
+          booking.bookings.map(oneBooking => {
+            bookings[strTime].push({
+              name: oneBooking.bookerName,
+              surname: oneBooking.bookerSurname,
+              time: oneBooking.bookerTime,
+              height: 50
+            });
+          })
+        }
+      });
+      this.setState({ bookings });
+    });
+  }
+
   /**
    * PR waiting about tabs not hiding
    */
-  componentWilMount() {
+  componentWillMount() {
     this.props.navigator.toggleTabs({
       tabBarHidden: true,
       to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
@@ -47,87 +67,24 @@ export default class MainCalendarScreen extends Component {
     });
   }
 
-  handleDaySelect = day => {
-    this.setState({
-      selectionDate: day.dateString
-    });
+  handleSubmit = (name, surname, selectionDate, selectionTime) => {
+    this.props.createBooking(
+      name, surname, selectionTime, selectionDate
+    ).then( response => {
+      this.props.navigator.pop({ animationType: 'slide-down' });
+      this.getBookings();
+    })
   }
-
-  handleTimeSelect = time => {
-    this.setState({
-      selectionTime: time.dateString
-    });
-  }
-
-  handleSubmit = (name, surname, date, time) => {
-    axios.post('http://localhost:3000/api/bookings/create', {
-      bookerName: name,
-      bookerSurname: surname,
-      bookerTime: time,
-      date
-    }).then(savedBookings => {
-      const { date } = savedBookings.data;
-      Object.keys(this.state.items).forEach(key => {
-        if (key == date) {
-          let arr = [];
-          savedBookings.data.bookings.map(booking => {
-            console.log(booking.bookerTime)
-            arr.push({
-              name: booking.bookerName,
-              surname: booking.bookerSurname,
-              time: booking.bookerTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            })
-          });
-          this.state.items[key] = arr;
-        }
-      });
-      this.setState({ items: this.state.items });
-      this.props.navigator.dismissModal({
-        animationType: 'slide-down',
-      });
-    }).catch(e => console.log(e))
-
-  }
-
-  loadItems = () => {
-    axios.get('http://localhost:3000/api/bookings/get')
-      .then(foundBookings => {
-        const { data } = foundBookings;
-        data.map(booking => {
-          const strTime = booking.date;
-          if (!this.state.items[strTime]) {
-            this.state.items[strTime] = [];
-            booking.bookings.map(oneBooking => {
-              console.log(oneBooking);
-              this.state.items[strTime].push({
-                name: oneBooking.bookerName,
-                surname: oneBooking.bookerSurname,
-                time: oneBooking.bookerTime,
-                height: Math.max(50, Math.floor(Math.random() * 150))
-              });
-            })
-          }
-          this.setState({
-            items: this.state.items
-          });
-        })
-      })
-      .catch(e => console.log(e))
-  }
+  
 
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
-        this.props.navigator.showModal({
+        this.props.navigator.push({
           screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
           title: "New Booking", // title of the screen as appears in the nav bar (optional)
           passProps: {
-            today: this.state.today,
-            selectionDate: this.state.selectionDate,
-            selectionTime: this.state.selectionTime,
-            lastDay: this.state.lastDay,
-            onSubmit: this.handleSubmit
+            handleSubmit: this.handleSubmit
           }, // simple serializable object that will pass as props to the modal (optional)
           navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
           animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
@@ -140,14 +97,20 @@ export default class MainCalendarScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <CalendarView
-          today={this.state.today}
-          lastDay={this.state.lastDay}
-          onDaySelect={this.handleDaySelect}
-          onTimeSelect={this.handleTimeSelect}
-          items={this.state.items}
-          loadItems={this.loadItems}
+          bookings={this.state.bookings}
         />
       </View>
     )
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    bookings: state.app.bookings
+  }
+}
+
+export default connect(
+  mapStateToProps, 
+  { ...actions }
+)(MainCalendarScreen);
