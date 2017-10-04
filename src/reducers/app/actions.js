@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import axios from 'axios';
 
 export function getDates(name, surname) {
   return {
@@ -36,16 +37,47 @@ export function setSelectionTime(time) {
   }
 }
 
-export function getBookings(foundBookings) {
+
+
+
+function postBooking(saved) { 
   return {
-    type: types.GET_BOOKINGS,
-    foundBookings
+    type: types.CREATE_BOOKING,
+    booking: saved.data
   }
 }
 
-export function createBooking(savedBookings) {
+function receiveBookings(response) {
   return {
-    type: types.CREATE_BOOKING,
-    savedBookings
+    type: types.GET_BOOKINGS,
+    bookings: response.data
   }
 }
+
+export function fetchBookings() {
+  return function (dispatch) {
+    return axios.get('http://localhost:3000/api/bookings/get')
+      .then(
+      response => dispatch(receiveBookings(response)),
+      error => console.log('An error occured.', error)
+      );
+  }
+}
+
+export function createBooking(
+  name, surname,
+  selectionTime, selectionDate
+) {
+  return function (dispatch) {
+    return axios.post('http://localhost:3000/api/bookings/create', {
+      bookerName: name,
+      bookerSurname: surname,
+      bookerTime: selectionTime,
+      date: selectionDate
+    }).then(
+      response => dispatch(postBooking(response)),
+      error => console.log('An error occured.', error)
+    );
+  }
+}
+

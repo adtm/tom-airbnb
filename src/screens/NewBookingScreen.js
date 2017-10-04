@@ -45,19 +45,9 @@ class NewBookingScreen extends Component {
   }
 
   onSubmit = (name, surname, selectionDate, selectionTime) => {
-    axios.post('http://localhost:3000/api/bookings/create', {
-      bookerName: name,
-      bookerSurname: surname,
-      bookerTime: selectionTime,
-      date: selectionDate
-    }).then(savedBookings => {
-      this.props.createBooking(savedBookings);
-      this.props.navigator.pop({
-        animationType: 'slide-down',
-      });
-    }).catch(e => console.log(e))
+    this.props.handleSubmit(name, surname, selectionTime, selectionDate);
   }
-  
+
   render() {
     return (
       <View >
@@ -108,8 +98,8 @@ class NewBookingScreen extends Component {
         </List>
         <Button style={{ margin: 10 }} type="primary" onClick={() => this.onSubmit(this.props.name,
           this.props.surname,
-          this.props.selectionDate,
-          this.props.selectionTime)}>Book</Button>
+          this.props.selectionTime,
+          this.props.selectionDate)}>Book</Button>
       </View>
     );
   }
@@ -132,7 +122,6 @@ const mapDispatchToProps = (dispatch) => {
     setSurname: surname => dispatch(appActions.setSurname(surname)),
     setTime: time => dispatch(appActions.setSelectionTime(moment(time).format("HH:mm"))),
     setDate: date => dispatch(appActions.setSelectionDate(moment(date).format("YYYY-MM-DD"))),
-    createBooking: data => dispatch(appActions.createBooking(data))
   }
 }
 

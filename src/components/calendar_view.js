@@ -11,18 +11,11 @@ import { Agenda } from 'react-native-calendars';
 
 class CalendarView extends Component {
 
-  componentDidMount() {
-    axios.get('http://localhost:3000/api/bookings/get')
-      .then(foundBookings => {
-        this.props.getBookings(foundBookings);
-      })
-      .catch(e => console.log(e))
-  }
-
-  render() { 
+  render() {
+    console.log(this.props.bookings)
     return (
       <Agenda
-        items={this.props.items} 
+        items={this.props.bookings}
         selected={this.props.today}
         maxDate={this.props.lastDay}
         onDayPress={this.props.setDay}
@@ -49,7 +42,6 @@ class CalendarView extends Component {
   }
 
   rowHasChanged = (r1, r2) => {
-    console.log('hit')
     return true;
   }
 
@@ -75,14 +67,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
-    items: state.app.items
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)),
-    getBookings: data => dispatch(appActions.getBookings(data)), 
+    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)), 
   }
 }
 
