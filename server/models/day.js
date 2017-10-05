@@ -7,7 +7,7 @@ const Booking = {
 }
 
 const daySchema = new mongoose.Schema({
-  date: String,
+  date: { type: Date, default: Date.now() },
   bookings: [Booking]
 });
 
