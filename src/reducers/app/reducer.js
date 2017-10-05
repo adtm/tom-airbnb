@@ -57,6 +57,7 @@ export default function app(state = initialState, action = {}) {
        bookings: action.bookings
       }; 
     }
+    // @TODO does not work correctly
     case types.CREATE_BOOKING: {
       const newBookings = state.bookings;
       return {
@@ -64,7 +65,13 @@ export default function app(state = initialState, action = {}) {
         bookings: newBookings.map(b => {
           if (b.date == moment(action.booking.date).format('YYYY-MM-DD')) {
             b.bookings = action.booking.bookings;
+            console.log('hit');
+            b.booking.sort((a,b) => {
+              console.log(moment(a.bookerTime).format('HH:mm'));
+              return moment(a.bookerTime).format('HH:mm') - moment(b.bookerTime).format('HH:mm');
+            })
           }
+          console.log(b)
           return b;
         })
       }

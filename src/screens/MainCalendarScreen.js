@@ -43,7 +43,6 @@ class MainCalendarScreen extends Component {
               name: oneBooking.bookerName,
               surname: oneBooking.bookerSurname,
               time: oneBooking.bookerTime,
-              height: 50
             });
           })
         }
@@ -67,7 +66,7 @@ class MainCalendarScreen extends Component {
   handleSubmit = (name, surname, selectionDate, selectionTime) => {
     this.props.createBooking(
       name, surname, selectionTime, selectionDate
-    ).then( response => {
+    ).then(response => {
       this.props.navigator.pop({ animationType: 'slide-down' });
       this.getBookings();
     })
