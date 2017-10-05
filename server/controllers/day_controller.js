@@ -9,7 +9,11 @@ function resetDays(req, res) {
     });
   };
   async.times(50, function(n, next) {
-    const date = moment().add(n, 'days').format();
+    var m = moment.utc();
+    m.set({hour:0,minute:0,second:0,millisecond:0});
+    m.add(n, 'days');
+    m.toISOString();
+    const date = m.format();
     const day = new Day({ date, bookings: [] });
       day.save(n, function(err, user) {
           next(err, user);
@@ -17,7 +21,6 @@ function resetDays(req, res) {
   }, function(err, dates) {
       res.json(dates)
   });
-
 }
 
 module.exports = {

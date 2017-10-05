@@ -62,7 +62,7 @@ export default function app(state = initialState, action = {}) {
       return {
         ...state,
         bookings: newBookings.map(b => {
-          if (b.date == action.booking.date) {
+          if (b.date == moment(action.booking.date).format('YYYY-MM-DD')) {
             b.bookings = action.booking.bookings;
           }
           return b;
