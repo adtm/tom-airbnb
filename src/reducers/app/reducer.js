@@ -2,7 +2,7 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 import moment from 'moment';
 
-const initialState =   Immutable({
+const initialState = Immutable({
   today: moment().format("YYYY-MM-DD"),
   lastDay: moment().add(2, 'weeks').format("YYYY-MM-DD"),
 
@@ -18,6 +18,15 @@ const initialState =   Immutable({
 
 export default function app(state = initialState, action = {}) {
   switch (action.type) {
+    case types.CLEAR_CREATION: {
+      return {
+        ...state,
+        name: '',
+        surname: '',
+        selectionDate: moment().format("YYYY-MM-DD"),
+        selectionTime: moment().format("HH:mm"),
+      }
+    }
     case types.SET_SELECTION_DATE: {
       return {
         ...state,
@@ -58,11 +67,6 @@ export default function app(state = initialState, action = {}) {
           }
           return b;
         })
-      }
-    }
-    case types.GET_TIMES: {
-      return {
-        ...state
       }
     }
     default:

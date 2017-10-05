@@ -1,14 +1,6 @@
 import * as types from './actionTypes';
 import axios from 'axios';
 
-export function getDates(name, surname) {
-  return {
-    type: types.GET_TIMES,
-    name,
-    surname
-  }
-}
-
 export function setName(name) {
   return {
     type: types.SET_NAME,
@@ -37,8 +29,11 @@ export function setSelectionTime(time) {
   }
 }
 
-
-
+function clearStateCreation() {
+  return {
+    type: types.CLEAR_CREATION,
+  }
+}
 
 function postBooking(saved) { 
   return {
@@ -75,7 +70,10 @@ export function createBooking(
       bookerTime: selectionTime,
       date: selectionDate
     }).then(
-      response => dispatch(postBooking(response)),
+      response => {
+        dispatch(postBooking(response));
+        dispatch(clearStateCreation())
+      },
       error => console.log('An error occured.', error)
     );
   }

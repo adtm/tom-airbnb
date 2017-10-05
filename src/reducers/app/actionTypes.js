@@ -4,5 +4,7 @@ export const SET_SELECTION_TIME = 'SET_SELECTION_TIME';
 export const SET_SURNAME = 'SET_SURNAME';
 export const SET_NAME = 'SET_NAME';
 
+export const CLEAR_CREATION = 'CLEAR_CREATION';
+
 export const GET_BOOKINGS = 'GET_BOOKINGS';
 export const CREATE_BOOKING = 'CREATE_BOOKING';
