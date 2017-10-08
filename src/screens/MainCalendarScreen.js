@@ -63,13 +63,18 @@ class MainCalendarScreen extends Component {
     });
   }
 
+  
   handleSubmit = (name, surname, selectionDate, selectionTime) => {
     this.props.createBooking(
       name, surname, selectionTime, selectionDate
     ).then(response => {
-      this.props.navigator.pop({ animationType: 'slide-down' });
-      this.getBookings();
-    })
+      if (response.payload.response.status === 400) {
+        // change color or button
+      } else {
+        this.props.navigator.pop({ animationType: 'slide-down' });
+        this.getBookings();
+      }
+    }).catch(err => console.log(err));
   }
   
 

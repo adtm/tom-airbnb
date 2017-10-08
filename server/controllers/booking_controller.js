@@ -44,7 +44,7 @@ function createBooking(req, res, next) {
         })
       });
 
-      if (bookings.length > 8) {
+      if (bookings.length > 1) {
         res.status(400).send(errorResponse('limit', 'Exceeded month limit'));
       }
       else {

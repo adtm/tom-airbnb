@@ -69,13 +69,20 @@ export function createBooking(
       bookerSurname: surname,
       bookerTime: selectionTime,
       date: selectionDate
-    }).then(
-      response => {
+    }).then(response => {
+      if (response.status == 400)
+        dispatch(errorResponse(respose))
+      else {
         dispatch(postBooking(response));
         dispatch(clearStateCreation())
-      },
-      error => console.log('An error occured.', error)
-    );
+      }
+    }).catch(error => dispatch(errorResponse(error)));
   }
 }
 
+function errorResponse(err) {
+  return {
+    type: types.CREATE_ERROR,
+    payload: err
+  };
+}

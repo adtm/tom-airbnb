@@ -12,12 +12,19 @@ const initialState = Immutable({
   name: '',
   surname: '',
 
-  items: {}
+  items: {},
+  erorr: ''
 });
 
 
 export default function app(state = initialState, action = {}) {
   switch (action.type) {
+    case types.CREATE_ERROR: {
+      return {
+        ...state,
+        error: action.payload
+      };
+    }
     case types.CLEAR_CREATION: {
       return {
         ...state,
@@ -57,7 +64,7 @@ export default function app(state = initialState, action = {}) {
        bookings: action.bookings
       }; 
     }
-    // @TODO does not work correctly
+    // @TODO does not work correctly - FIX URGENT
     case types.CREATE_BOOKING: {
       const newBookings = state.bookings;
       return {
