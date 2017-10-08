@@ -35,7 +35,7 @@ function clearStateCreation() {
   }
 }
 
-function postBooking(saved) { 
+export function postBooking(saved) { 
   return {
     type: types.CREATE_BOOKING,
     booking: saved.data
@@ -69,13 +69,9 @@ export function createBooking(
       bookerSurname: surname,
       bookerTime: selectionTime,
       date: selectionDate
-    }).then(response => {
-      if (response.status == 400)
-        dispatch(errorResponse(respose))
-      else {
-        dispatch(postBooking(response));
-        dispatch(clearStateCreation())
-      }
+    }).then(response => { 
+      dispatch(clearStateCreation());
+      return response;
     }).catch(error => dispatch(errorResponse(error)));
   }
 }

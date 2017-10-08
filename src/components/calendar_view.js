@@ -13,7 +13,6 @@ import moment from 'moment';
 class CalendarView extends Component {
 
   render() {
-    console.log(this.props.bookings)
     return (
       <Agenda
         items={this.props.bookings}

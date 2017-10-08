@@ -68,9 +68,9 @@ class MainCalendarScreen extends Component {
     this.props.createBooking(
       name, surname, selectionTime, selectionDate
     ).then(response => {
- 
-        this.props.navigator.pop({ animationType: 'slide-down' });
-        this.getBookings();
+      this.props.postBooking(response);
+      this.getBookings();
+      this.props.navigator.pop({ animationType: 'slide-down' });
     }).catch(err => console.log(err));
   }
   
