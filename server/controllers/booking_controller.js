@@ -19,20 +19,14 @@ function getBookings(req, res) {
 
 function createBooking(req, res, next) {
 
-  // @TODO change moment things
   const { bookerName, bookerSurname, bookerTime, date } = req.body;
-  const datef = moment(
-    moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD') +
-    moment(bookerTime, 'HH:mm').format('HH:mm'),
-    'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+  const datef = dateConcatanateTime(date, bookerTime);
 
-  // limit--checking
   const year_limit = moment(date).year();
   const month_limit = moment(date).month();
 
-  // @TODO fix upper date
-  const lower_date = moment(new Date(year_limit, month_limit, 1)).format();
-  const upper_date = moment(new Date(year_limit, month_limit + 1, 0)).format();
+  const lower_date = moment({year: year_limit, month: month_limit, day: 1})
+  const upper_date = moment({year: year_limit, month: month_limit + 1, day: 1})
 
   Day
     .find({ date: { $gte: lower_date, $lte: upper_date } })
@@ -44,7 +38,7 @@ function createBooking(req, res, next) {
         })
       });
 
-      if (bookings.length > 1) {
+      if (bookings.length > 8) {
         res.status(400).send(errorResponse('limit', 'Exceeded month limit'));
       }
       else {
@@ -71,7 +65,7 @@ function createBooking(req, res, next) {
                 foundDay.bookings.push(response);
                 foundDay.bookings.sort((a, b) => {
                   return moment(a.bookerTime).valueOf() - moment(b.bookerTime).valueOf();
-                })
+                });
                 foundDay
                   .save()
                   .then(response => res.status(200).send(response))
@@ -80,6 +74,13 @@ function createBooking(req, res, next) {
           })
       }
     });
+}
+
+function dateConcatanateTime(date, time) {
+  return moment(
+    moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD') +
+    moment(time, 'HH:mm').format('HH:mm'),
+    'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
 }
 
 module.exports = {

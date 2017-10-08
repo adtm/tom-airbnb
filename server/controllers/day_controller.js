@@ -3,6 +3,13 @@ const Booking = require('../models/booking');
 const Day = require('../models/day');
 const moment = require('moment');
 
+function errorResponse(phrase, err) {
+  return {
+    info: `Error in reseting data: ${phrase}`,
+    err
+  }
+}
+
 function resetDays(req, res) {
 
   Day
@@ -36,7 +43,7 @@ function resetDays(req, res) {
 
   }, (err, response) => {
     if (err)
-      res.status(404).send({ err });
+      res.status(404).send(errorResponse('creating', err));
     res.status(200).send(response);
   });
 }
