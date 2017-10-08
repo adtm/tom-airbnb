@@ -21,9 +21,10 @@ function createBooking(req, res, next) {
 
   // @TODO change moment things
   const { bookerName, bookerSurname, bookerTime, date } = req.body;
-  const year = moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD');
-  const time = moment(bookerTime, 'HH:mm').format('HH:mm')
-  const datef = moment(year + ' ' + time, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+  const datef = moment(
+    moment(date, 'YYYY-MM-DD').format('YYYY-MM-DD') +
+    moment(bookerTime, 'HH:mm').format('HH:mm'),
+    'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
 
   Day
     .findOne({ date: date })
