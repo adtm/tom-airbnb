@@ -8,6 +8,7 @@ import {
   StyleSheet
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
+import moment from 'moment';
 
 class CalendarView extends Component {
 
@@ -30,7 +31,7 @@ class CalendarView extends Component {
     return (
       <View style={[styles.item, { height: item.height }]}>
         <Text>Name: {item.name} {item.surname}</Text>
-        <Text>Time: {item.time}</Text>
+        <Text>Time: {moment(item.time).format('HH:mm')}</Text>
       </View>
     );
   }

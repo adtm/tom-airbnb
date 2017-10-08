@@ -1,27 +1,26 @@
-const Booking = require('../models/booking');
+const async = require('async');
 const Day = require('../models/day');
 const moment = require('moment');
 
-function timeToString(time) {
-  const date = new Date(time);
-  return date.toISOString().split('T')[0];
-}
-
-function resetDays(req, res, next) {
-  let savedItems = [];
-  for (let i = -80; i < 100; i++) {
-    const time = moment().toDate().getTime() + i * 24 * 60 * 60 * 1000;
-    const strTime = timeToString(time);
-    const day = new Day({
-      date: strTime,
-      bookings: []
+function resetDays(req, res) {
+  var createUser = function(respose, callback) {
+    callback(null, {
+        date: response
     });
-    day.save()
-      .then(savedData => {
-        savedItems.push(savedData);
-    }).catch(e => console.log(e));
-  }
-  res.json(savedItems); // change to async
+  };
+  async.times(50, function(n, next) {
+    var m = moment.utc();
+    m.set({hour:0,minute:0,second:0,millisecond:0});
+    m.add(n, 'days');
+    m.toISOString();
+    const date = m.format();
+    const day = new Day({ date, bookings: [] });
+      day.save(n, function(err, user) {
+          next(err, user);
+      });
+  }, function(err, dates) {
+      res.json(dates)
+  });
 }
 
 module.exports = {

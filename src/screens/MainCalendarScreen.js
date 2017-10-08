@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from '../reducers/app/actions';
 import { View } from 'react-native';
 import CalendarView from '../components/calendar_view';
+import moment from 'moment';
 
 class MainCalendarScreen extends Component {
 
@@ -34,7 +35,7 @@ class MainCalendarScreen extends Component {
     .then(() => {
       let bookings = {};
       this.props.bookings.map(booking => {
-        const strTime = booking.date;
+        const strTime = moment(booking.date).format('YYYY-MM-DD');
         if (!this.props.bookings[strTime]) {
           bookings[strTime] = [];
           booking.bookings.map(oneBooking => {
@@ -42,7 +43,6 @@ class MainCalendarScreen extends Component {
               name: oneBooking.bookerName,
               surname: oneBooking.bookerSurname,
               time: oneBooking.bookerTime,
-              height: 50
             });
           })
         }
@@ -66,7 +66,7 @@ class MainCalendarScreen extends Component {
   handleSubmit = (name, surname, selectionDate, selectionTime) => {
     this.props.createBooking(
       name, surname, selectionTime, selectionDate
-    ).then( response => {
+    ).then(response => {
       this.props.navigator.pop({ animationType: 'slide-down' });
       this.getBookings();
     })

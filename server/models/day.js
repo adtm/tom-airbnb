@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const Booking = {
   bookerName: String,
   bookerSurname: String,
-  bookerTime: String,
+  bookerTime: { type: Date }
 }
 
 const daySchema = new mongoose.Schema({
-  date: String,
+  date: { type: Date, default: Date.now() },
   bookings: [Booking]
 });
 
