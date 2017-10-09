@@ -11,20 +11,9 @@ class MainCalendarScreen extends Component {
     super(props);
     this.state = {
       bookings: {}
-    };
+    }
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
-
-  static navigatorButtons = {
-    rightButtons: [
-      {
-        title: 'Add', // for a textual button, provide the button title (label)
-        id: 'add', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
-        disableIconTint: true, // optional, by default the image colors are overridden and tinted to navBarButtonColor, set to true to keep the original image colors
-      }
-    ]
-  };
 
   componentDidMount() {
     this.getBookings();
@@ -51,6 +40,17 @@ class MainCalendarScreen extends Component {
     });
   }
 
+  static navigatorButtons = {
+    rightButtons: [
+      {
+        title: 'Add', // for a textual button, provide the button title (label)
+        id: 'add', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
+        disableIconTint: true, // optional, by default the image colors are overridden and tinted to navBarButtonColor, set to true to keep the original image colors
+      }
+    ]
+  };
+
   /**
    * PR waiting about tabs not hiding
    */
@@ -62,16 +62,16 @@ class MainCalendarScreen extends Component {
       drawUnderTabBar: true
     });
   }
-
   
   handleSubmit = (name, surname, selectionDate, selectionTime) => {
     this.props.createBooking(
       name, surname, selectionTime, selectionDate
-    ).then(response => {
-      this.props.postBooking(response);
-      this.getBookings();
-      this.props.navigator.pop({ animationType: 'slide-down' });
-    }).catch(err => console.log(err));
+    ).then(status => {
+      if (status) {
+        this.getBookings();
+        this.props.navigator.pop({ animationType: 'slide-down' });
+      };
+    });
   }
   
 
@@ -102,13 +102,14 @@ class MainCalendarScreen extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
-    bookings: state.app.bookings
+    bookings: state.app.bookings,
   }
 }
 
+
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   { ...actions }
 )(MainCalendarScreen);

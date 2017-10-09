@@ -11,8 +11,7 @@ const initialState = Immutable({
 
   name: '',
   surname: '',
-  
-  erorr: ''
+  error: ''
 });
 
 

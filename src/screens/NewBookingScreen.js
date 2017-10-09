@@ -40,7 +40,7 @@ class NewBookingScreen extends Component {
   }
 
   onSubmit = (name, surname, selectionDate, selectionTime) => {
-    this.props.handleSubmit(name, surname, selectionTime, selectionDate);
+    this.props.handleSubmit(name, surname, selectionTime, selectionDate)
   }
 
   render() {
@@ -95,12 +95,14 @@ class NewBookingScreen extends Component {
           this.props.surname,
           this.props.selectionTime,
           this.props.selectionDate)}>Book</Button>
+        <Text>{this.props.error}</Text>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
@@ -108,6 +110,7 @@ const mapStateToProps = state => {
     selectionTime: state.app.selectionTime,
     name: state.app.name,
     surname: state.app.surname,
+    error: state.app.error
   };
 }
 

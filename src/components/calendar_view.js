@@ -72,7 +72,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)), 
+    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)),
   }
 }
 

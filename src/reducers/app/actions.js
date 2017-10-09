@@ -71,12 +71,13 @@ export function createBooking(
       date: selectionDate
     }).then(response => { 
       dispatch(clearStateCreation());
-      return response;
-    }).catch(error => dispatch(errorResponse(error)));
+      // dispatch create booking
+      return true;
+    }).catch(response => {dispatch(errorResponse(response.response.data.err))});
   }
 }
 
-function errorResponse(err) {
+export function errorResponse(err) {
   return {
     type: types.CREATE_ERROR,
     payload: err
