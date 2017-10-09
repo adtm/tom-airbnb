@@ -13,7 +13,6 @@ import moment from 'moment';
 class CalendarView extends Component {
 
   render() {
-    console.log(this.props.bookings)
     return (
       <Agenda
         items={this.props.bookings}
@@ -73,7 +72,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)), 
+    setDay: date => dispatch(appActions.setSelectionDate(date.dateString)),
   }
 }
 

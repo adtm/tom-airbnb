@@ -40,7 +40,7 @@ class NewBookingScreen extends Component {
   }
 
   onSubmit = (name, surname, selectionDate, selectionTime) => {
-    this.props.handleSubmit(name, surname, selectionTime, selectionDate);
+    this.props.handleSubmit(name, surname, selectionTime, selectionDate)
   }
 
   render() {
@@ -91,16 +91,21 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
-        <Button style={{ margin: 10 }} type="primary" onClick={() => this.onSubmit(this.props.name,
+        <Button
+          style={{ margin: 10 }}
+          type={this.props.error ? "warning" : "primary"}
+          onClick={() => this.onSubmit(this.props.name,
           this.props.surname,
           this.props.selectionTime,
-          this.props.selectionDate)}>Book</Button>
+          this.props.selectionDate)}>
+          {this.props.error ? this.props.error : "Book"}</Button>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => {
+  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
@@ -108,6 +113,7 @@ const mapStateToProps = state => {
     selectionTime: state.app.selectionTime,
     name: state.app.name,
     surname: state.app.surname,
+    error: state.app.error
   };
 }
 

@@ -35,7 +35,7 @@ function clearStateCreation() {
   }
 }
 
-function postBooking(saved) { 
+export function postBooking(saved) { 
   return {
     type: types.CREATE_BOOKING,
     booking: saved.data
@@ -69,13 +69,17 @@ export function createBooking(
       bookerSurname: surname,
       bookerTime: selectionTime,
       date: selectionDate
-    }).then(
-      response => {
-        dispatch(postBooking(response));
-        dispatch(clearStateCreation())
-      },
-      error => console.log('An error occured.', error)
-    );
+    }).then(response => { 
+      dispatch(clearStateCreation());
+      // dispatch create booking
+      return true;
+    }).catch(response => {dispatch(errorResponse(response.response.data.err))});
   }
 }
 
+export function errorResponse(err) {
+  return {
+    type: types.CREATE_ERROR,
+    payload: err
+  };
+}
