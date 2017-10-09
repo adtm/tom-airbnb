@@ -91,11 +91,14 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
-        <Button style={{ margin: 10 }} type="primary" onClick={() => this.onSubmit(this.props.name,
+        <Button
+          style={{ margin: 10 }}
+          type={this.props.error ? "warning" : "primary"}
+          onClick={() => this.onSubmit(this.props.name,
           this.props.surname,
           this.props.selectionTime,
-          this.props.selectionDate)}>Book</Button>
-        <Text>{this.props.error}</Text>
+          this.props.selectionDate)}>
+          {this.props.error ? this.props.error : "Book"}</Button>
       </View>
     );
   }
