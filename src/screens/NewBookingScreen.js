@@ -3,6 +3,7 @@ import { ScrollView, View, Text } from 'react-native';
 import List from 'antd-mobile/lib/list';
 import TextareaItem from 'antd-mobile/lib/textarea-item';
 import Button from 'antd-mobile/lib/button';
+import Switch from 'antd-mobile/lib/switch'
 import DatePicker from 'antd-mobile/lib/date-picker';
 import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
@@ -45,7 +46,7 @@ class NewBookingScreen extends Component {
 
   render() {
     return (
-      <View >
+      <ScrollView>
         <List renderHeader={() => 'Person information'}>
           <TextareaItem
             placeholder="Name"
@@ -91,21 +92,82 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
+        <List renderHeader={() => 'Requests'}>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >MC drive-through </List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Night drive </List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Leave a perfumed item </List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Car pickup </List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Food delivery when ill</List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Go to restaurant</List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Movie date</List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Sleepover</List.Item>
+          <List.Item
+            extra={<Switch
+              checked={false}
+              onClick={(checked) => { console.log(checked); }}
+            />}
+          >Cooking</List.Item>
+        </List>
+        <List renderHeader={() => 'Notes'}>
+          <TextareaItem
+            rows={5}
+            count={100}
+          />
+        </List>
         <Button
           style={{ margin: 10 }}
           type={this.props.error ? "warning" : "primary"}
           onClick={() => this.onSubmit(this.props.name,
-          this.props.surname,
-          this.props.selectionTime,
-          this.props.selectionDate)}>
+            this.props.surname,
+            this.props.selectionTime,
+            this.props.selectionDate)}>
           {this.props.error ? this.props.error : "Book"}</Button>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
