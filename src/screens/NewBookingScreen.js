@@ -8,18 +8,11 @@ import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { connect } from 'react-redux';
 import * as actions from '../reducers/app/actions';
+import axios from 'axios'
 
+import RequestList from '../components/request_list';
 
 class NewBookingScreen extends Component {
-  static navigatorButtons = {
-    leftButtons: [
-      {
-        title: 'Back', // for a textual button, provide the button title (label)
-        id: 'back', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
-      }
-    ]
-  };
 
   constructor(props) {
     super(props);
@@ -29,6 +22,35 @@ class NewBookingScreen extends Component {
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
+  componentDidMount() { 
+      axios
+        .get('http://localhost:3000/api/request')
+        .then(response => this.setState({ switches: response.data }))
+  }
+
+
+  changeSwitch = (item) => {
+    let stateCopy = this.state.switches;
+    for (var i in stateCopy) {
+      if (stateCopy[i].name === item.name) {
+         stateCopy[i].checked = !stateCopy[i].checked;
+         this.setState({ switches: stateCopy });
+         break; //Stop this loop, we found it!
+      }
+    };
+  }
+
+
+  static navigatorButtons = {
+    leftButtons: [
+      {
+        title: 'Back', // for a textual button, provide the button title (label)
+        id: 'back', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
+      }
+    ]
+  };
+  
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'back') { // this is the same id field from the static navigatorButtons definition
@@ -44,8 +66,9 @@ class NewBookingScreen extends Component {
   }
 
   render() {
+    console.log(this.state.switches);
     return (
-      <View >
+      <ScrollView>
         <List renderHeader={() => 'Person information'}>
           <TextareaItem
             placeholder="Name"
@@ -91,21 +114,24 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
+        <RequestList
+            data={this.state.switches}
+            changeSwitch={this.changeSwitch}
+        />
         <Button
           style={{ margin: 10 }}
           type={this.props.error ? "warning" : "primary"}
           onClick={() => this.onSubmit(this.props.name,
-          this.props.surname,
-          this.props.selectionTime,
-          this.props.selectionDate)}>
+            this.props.surname,
+            this.props.selectionTime,
+            this.props.selectionDate)}>
           {this.props.error ? this.props.error : "Book"}</Button>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     today: state.app.today,
     lastDay: state.app.lastDay,
