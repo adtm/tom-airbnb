@@ -32,6 +32,7 @@ class MainCalendarScreen extends Component {
               name: oneBooking.bookerName,
               surname: oneBooking.bookerSurname,
               time: oneBooking.bookerTime,
+              requests: oneBooking.requests,
             });
           })
         }

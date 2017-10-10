@@ -12,6 +12,13 @@ import moment from 'moment';
 
 class CalendarView extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      more: false
+    }
+  }
+
   render() {
     return (
       <Agenda
@@ -26,11 +33,25 @@ class CalendarView extends Component {
     );
   }
 
+  renderRequests = (requests) => {
+    console.log(requests)
+    if (requests) {
+      return requests.map(request => {
+        if (request.checked) {
+          return <Text>{request.name}</Text>
+        }
+      })
+    }
+  }
+
   renderItem = (item) => {
+    console.log(item)
     return (
       <View style={[styles.item, { height: item.height }]}>
         <Text>Name: {item.name} {item.surname}</Text>
         <Text>Time: {moment(item.time).format('HH:mm')}</Text>
+        <Text>----</Text>
+        {this.renderRequests(item.requests)}
       </View>
     );
   }
@@ -52,8 +73,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
     borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
+    padding: 15,
+    marginRight: 20,
     marginTop: 17
   },
   emptyDate: {
