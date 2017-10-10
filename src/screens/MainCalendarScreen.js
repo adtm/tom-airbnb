@@ -63,9 +63,9 @@ class MainCalendarScreen extends Component {
     });
   }
   
-  handleSubmit = (name, surname, selectionDate, selectionTime) => {
+  handleSubmit = (name, surname, selectionDate, selectionTime, requests) => {
     this.props.createBooking(
-      name, surname, selectionTime, selectionDate
+      name, surname, selectionTime, selectionDate, requests
     ).then(status => {
       if (status) {
         this.getBookings();
@@ -107,7 +107,6 @@ const mapStateToProps = (state) => {
     bookings: state.app.bookings,
   }
 }
-
 
 export default connect(
   mapStateToProps,

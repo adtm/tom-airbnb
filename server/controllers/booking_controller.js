@@ -19,7 +19,7 @@ function getBookings(req, res) {
 
 function createBooking(req, res, next) {
 
-  const { bookerName, bookerSurname, bookerTime, date } = req.body;
+  const { bookerName, bookerSurname, bookerTime, date, requests } = req.body;
   const datef = dateConcatanateTime(date, bookerTime);
 
   const year_limit = moment(date).year();
@@ -47,7 +47,7 @@ function createBooking(req, res, next) {
           .then(foundDay => {
             if (!foundDay) {
               Booking
-                .create({ bookerName, bookerSurname, bookerTime: datef })
+                .create({ bookerName, bookerSurname, bookerTime: datef, requests })
                 .then(
                 response => {
                   Day
@@ -58,7 +58,7 @@ function createBooking(req, res, next) {
             }
 
             Booking
-              .create({ bookerName, bookerSurname, bookerTime: datef })
+              .create({ bookerName, bookerSurname, bookerTime: datef, requests })
               .then(
               response => {
                 // @TODO change later to a regular map
