@@ -9,8 +9,6 @@ const initialState = Immutable({
   selectionDate: moment().format("YYYY-MM-DD"),
   selectionTime: moment().format("HH:mm"),
 
-  name: '',
-  surname: '',
   error: ''
 });
 
@@ -42,18 +40,6 @@ export default function app(state = initialState, action = {}) {
       return {
         ...state,
         selectionTime: action.time
-      }
-    }
-    case types.SET_NAME: {
-      return {
-        ...state,
-        name: action.name
-      }
-    }
-    case types.SET_SURNAME: {
-      return {
-        ...state,
-        surname: action.surname
       }
     }
     case types.GET_BOOKINGS: {

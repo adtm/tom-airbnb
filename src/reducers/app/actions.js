@@ -1,20 +1,6 @@
 import * as types from './actionTypes';
 import axios from 'axios';
 
-export function setName(name) {
-  return {
-    type: types.SET_NAME,
-    name
-  }
-}
-
-export function setSurname(surname) {
-  return {
-    type: types.SET_SURNAME,
-    surname
-  }
-}
-
 export function setSelectionDate(date) {
   return {
     type: types.SET_SELECTION_DATE,
