@@ -1,0 +1,12 @@
+{
+  "requests": [
+    { "name": "MC drive-through", "checked": false },
+    { "name": "Night Drive", "checked": false },
+    { "name": "Perfume", "checked": false },
+    { "name": "Car delivery", "checked": false },
+    { "name": "Food deliver", "checked": false },
+    { "name": "Movie night", "checked": false },
+    { "name": "Sleepover", "checked": false },
+    { "name": "Cooking", "checked": false }
+  ]
+}

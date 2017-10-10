@@ -3,15 +3,46 @@ import { ScrollView, View, Text } from 'react-native';
 import List from 'antd-mobile/lib/list';
 import TextareaItem from 'antd-mobile/lib/textarea-item';
 import Button from 'antd-mobile/lib/button';
-import Switch from 'antd-mobile/lib/switch'
 import DatePicker from 'antd-mobile/lib/date-picker';
 import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { connect } from 'react-redux';
 import * as actions from '../reducers/app/actions';
 
+import RequestList from '../components/request_list';
 
 class NewBookingScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      focused: false,
+      switches: [
+         { name: 'MC drive-through', checked: false },
+         { name: 'Night Drive', checked: false },
+         { name: 'Perfume', checked: false },
+         { name: 'Car delivery', checked: false },
+         { name: 'Food deliver', checked: false },
+         { name: 'Movie night', checked: false },
+         { name: 'Sleepover', checked: false },
+         { name: 'Cooking', checked: false },
+      ]
+    };
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+  }
+
+  changeSwitch = (item) => {
+    let stateCopy = this.state.switches;
+    for (var i in stateCopy) {
+      if (stateCopy[i].name === item.name) {
+         stateCopy[i].checked = !stateCopy[i].checked;
+         this.setState({ switches: stateCopy });
+         break; //Stop this loop, we found it!
+      }
+    };
+  }
+
+
   static navigatorButtons = {
     leftButtons: [
       {
@@ -21,15 +52,7 @@ class NewBookingScreen extends Component {
       }
     ]
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      focused: false,
-    };
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
+  
   onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
     if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
       if (event.id == 'back') { // this is the same id field from the static navigatorButtons definition
@@ -92,68 +115,10 @@ class NewBookingScreen extends Component {
             <List.Item arrow="horizontal">Book Time</List.Item>
           </DatePicker>
         </List>
-        <List renderHeader={() => 'Requests'}>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >MC drive-through </List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Night drive </List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Leave a perfumed item </List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Car pickup </List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Food delivery when ill</List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Go to restaurant</List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Movie date</List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Sleepover</List.Item>
-          <List.Item
-            extra={<Switch
-              checked={false}
-              onClick={(checked) => { console.log(checked); }}
-            />}
-          >Cooking</List.Item>
-        </List>
-        <List renderHeader={() => 'Notes'}>
-          <TextareaItem
-            rows={5}
-            count={100}
-          />
-        </List>
+        <RequestList
+            data={this.state.switches}
+            changeSwitch={this.changeSwitch}
+        />
         <Button
           style={{ margin: 10 }}
           type={this.props.error ? "warning" : "primary"}
