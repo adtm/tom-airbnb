@@ -60,8 +60,8 @@ class NewBookingScreen extends Component {
     this.props.handleSubmit(
       this.state.name, 
       this.state.surname, 
-      this.props.selectionTime, 
-      this.props.selectionDate,
+      this.props.selectionDate, 
+      this.props.selectionTime,
     this.state.switches)
   }
 
@@ -92,12 +92,10 @@ class NewBookingScreen extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selectionDate: state.app.selectionDate,
-    selectionTime: state.app.selectionTime,
-    error: state.app.error
-  };
-}
+const mapStateToProps = state => ({
+  selectionDate: state.app.selectionDate,
+  selectionTime: state.app.selectionTime,
+  error: state.app.error
+})
 
 export default connect(mapStateToProps, null)(NewBookingScreen);

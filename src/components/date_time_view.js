@@ -42,12 +42,10 @@ class DateTimeView extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    today: state.app.today,
-    lastDay: state.app.lastDay,
-  }
-}
+const mapStateToProps = state => ({
+  today: state.app.today,
+  lastDay: state.app.lastDay, 
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
