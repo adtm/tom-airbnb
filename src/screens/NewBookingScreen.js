@@ -8,6 +8,7 @@ import moment from 'moment'
 import enUs from 'antd-mobile/lib/date-picker/locale/en_US';
 import { connect } from 'react-redux';
 import * as actions from '../reducers/app/actions';
+import axios from 'axios'
 
 import RequestList from '../components/request_list';
 
@@ -17,19 +18,16 @@ class NewBookingScreen extends Component {
     super(props);
     this.state = {
       focused: false,
-      switches: [
-         { name: 'MC drive-through', checked: false },
-         { name: 'Night Drive', checked: false },
-         { name: 'Perfume', checked: false },
-         { name: 'Car delivery', checked: false },
-         { name: 'Food deliver', checked: false },
-         { name: 'Movie night', checked: false },
-         { name: 'Sleepover', checked: false },
-         { name: 'Cooking', checked: false },
-      ]
     };
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
+
+  componentDidMount() { 
+      axios
+        .get('http://localhost:3000/api/request')
+        .then(response => this.setState({ switches: response.data }))
+  }
+
 
   changeSwitch = (item) => {
     let stateCopy = this.state.switches;
@@ -68,6 +66,7 @@ class NewBookingScreen extends Component {
   }
 
   render() {
+    console.log(this.state.switches);
     return (
       <ScrollView>
         <List renderHeader={() => 'Person information'}>
