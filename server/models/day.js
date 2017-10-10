@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const Booking = {
   bookerName: String,
   bookerSurname: String,
-  bookerTime: { type: Date }
+  bookerTime: { type: Date },
+  requests: []
 }
 
 const daySchema = new mongoose.Schema({
