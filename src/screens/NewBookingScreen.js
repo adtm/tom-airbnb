@@ -23,7 +23,7 @@ class NewBookingScreen extends Component {
 
   componentDidMount() { 
       axios
-        .get('http://localhost:3000/api/request')
+        .get('https://tombnb-server.herokuapp.com/api/request')
         .then(response => this.setState({ switches: response.data }))
   }
 

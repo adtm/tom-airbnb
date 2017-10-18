@@ -37,7 +37,7 @@ function receiveBookings(response) {
 
 export function fetchBookings() {
   return function (dispatch) {
-    return axios.get('http://localhost:3000/api/bookings/get')
+    return axios.get('https://tombnb-server.herokuapp.com/api/bookings/get')
       .then(
       response => dispatch(receiveBookings(response)),
       error => console.log('An error occured.', error)
@@ -50,7 +50,7 @@ export function createBooking(
   selectionTime, selectionDate, requests
 ) {
   return function (dispatch) {
-    return axios.post('http://localhost:3000/api/bookings/create', {
+    return axios.post('https://tombnb-server.herokuapp.com/api/bookings/create', {
       bookerName: name,
       bookerSurname: surname,
       bookerTime: selectionTime,
