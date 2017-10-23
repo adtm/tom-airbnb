@@ -26,12 +26,11 @@ export default class App {
       Navigation.startTabBasedApp({
         tabs: [
           {
+            label: 'Calendar',
             screen: 'tombnb.MainCalendarScreen', // this is a registered name for a screen
             title: 'Calendar',
-          }
-        ], tabStyle: {
-          tabBarHidden: true
-        }
+          },
+        ],
       }); 
   }
 }

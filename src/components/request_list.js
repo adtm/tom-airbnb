@@ -1,38 +1,32 @@
 import React, { Component } from "react";
-import List from "antd-mobile/lib/list";
 import { ScrollView } from "react-native";
-import Switch from 'antd-mobile/lib/switch'
-import TextareaItem from 'antd-mobile/lib/textarea-item';
+import {
+  List,
+  Switch,
+  TextareaItem,
+  Button,
+  ActivityIndicator
+} from 'antd-mobile';
 
-export default class RequestList extends Component {
-  
-  render() {
+const RequestList = ({ checked, changeChecked, notes, notesChange }) => {
     return (
       <ScrollView>
-        {this.props.data ? 
-        <List renderHeader={() => "Requests"}>
-        {this.props.data.map((item, index) => {
-          return (
-            <List.Item
-              key={`${index}+i`}
-              extra={
-                <Switch
-                  checked={item.checked}
-                  onChange={checked => {
-                    this.props.changeSwitch(item);
-                  }}
-                />
-              }
-            >
-              {item.name}
-            </List.Item>
-          );
-        })}
-      </List> : null}
-      <List renderHeader={() => "Notes"}>
-        <TextareaItem rows={5} count={100} />
+        <List renderHeader={() => "Additional Information"}>
+        <TextareaItem
+          value={notes}
+          onChange={notesChange}
+          rows={5}
+          count={100}
+        /> 
+          <List.Item extra={
+            <Switch
+              checked={checked}
+              onChange={changeChecked} />
+          }>Save to iCalendar
+          </List.Item> 
       </List>
       </ScrollView>
     );
-  }
-}
+};
+
+export default RequestList;
