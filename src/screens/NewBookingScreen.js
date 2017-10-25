@@ -8,12 +8,10 @@ import {
   List,
   Switch,
   TextareaItem,
-  InputItem
+  InputItem,
+  DatePicker
 } from "antd-mobile";
-
-import DateTimeView from "../components/date_time_view";
-import PersonInformation from "../components/person_information";
-import RequestList from "../components/request_list";
+import enUs from "antd-mobile/lib/date-picker/locale/en_US";
 import moment from "moment";
 
 import * as AddCalendarEvent from "react-native-add-calendar-event";
@@ -26,26 +24,15 @@ class NewBookingScreen extends Component {
       checked: true,
       switches: []
     };
-    // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   componentDidMount() {
-    axios.get("https://tombnb-server.herokuapp.com/api/request")
+    axios
+      .get("https://tombnb-server.herokuapp.com/api/request")
       .then(response => {
-        this.setState({ switches: response.data })
+        this.setState({ switches: response.data });
       });
   }
-
-  // changeSwitch = item => {
-  //   let stateCopy = this.state.switches;
-  //   for (var i in stateCopy) {
-  //     if (stateCopy[i].name === item.name) {
-  //       stateCopy[i].checked = !stateCopy[i].checked;
-  //       this.setState({ switches: stateCopy });
-  //       break; //Stop this loop, we found it!
-  //     }
-  //   }
-  // };
 
   // onSubmit = () => {
   //   // this.props.handleSubmit(
@@ -126,6 +113,34 @@ class NewBookingScreen extends Component {
         </List>
 
         <List renderHeader={() => "Booking Information"}>
+          <DatePicker
+            mode="date"
+            format={val => val.format("YYYY-MM-DD")}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            minDate={moment().format("YYYY-MM-DD")}
+            maxDate={moment()
+              .add(2, "weeks")
+              .format("YYYY-MM-DD")}
+            {...getFieldProps("day", {
+              initialValue: moment(this.props.day, "YYYY-MM-DD")
+            })}
+          >
+            <List.Item arrow="horizontal">Book Date</List.Item>
+          </DatePicker>
+          <DatePicker
+            mode="time"
+            format={val => val.format("HH:mm")}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            {...getFieldProps("time", {
+              initialValue: moment()
+            })}
+          >
+            <List.Item arrow="horizontal">Book Time</List.Item>
+          </DatePicker>
           <Accordion>
             <Accordion.Panel header="Request List">
               <List>
@@ -136,9 +151,10 @@ class NewBookingScreen extends Component {
                       extra={
                         <Switch
                           checked={item.checked}
-                          onChange={checked => {
-                            this.changeSwitch(item);
-                          }}
+                          {...getFieldProps(`switch-${index}`, {
+                            initialValue: false,
+                            valuePropName: "checked"
+                          })}
                         />
                       }
                     >
@@ -169,58 +185,6 @@ class NewBookingScreen extends Component {
             Save to iCalendar
           </List.Item>
         </List>
-
-        {/* 
-        <DateTimeView
-          selectionDate={this.props.selectionDate}
-          selectionTime={this.props.selectionTime}
-        />
-
-        <Accordion accordion openAnimation={{}}>
-          <Accordion.Panel header="Request List">
-            <List>
-              {this.state.switches.map((item, index) => {
-                return (
-                  <List.Item
-                    key={`${index}+i`}
-                    extra={
-                      <Switch
-                        checked={item.checked}
-                        onChange={checked => {
-                          this.changeSwitch(item);
-                        }}
-                      />
-                    }
-                  >
-                    {item.name}
-                  </List.Item>
-                );
-              })}
-            </List>
-          </Accordion.Panel>
-        </Accordion>
-
-        <View>
-          <List renderHeader={() => "Additional Information"}>
-            <TextareaItem
-              value={this.state.notes}
-              onChange={notes => this.setState({ notes })}
-              rows={5}
-              count={100}
-            />
-            <List.Item
-              extra={
-                <Switch
-                  checked={this.state.checked}
-                  onChange={checked => this.setState({ checked })}
-                />
-              }
-            >
-              Save to iCalendar
-            </List.Item>
-          </List>
-        </View> */}
-
         <Button
           style={{ margin: 10 }}
           type={this.props.error ? "warning" : "primary"}
@@ -233,33 +197,4 @@ class NewBookingScreen extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  selectionDate: state.app.selectionDate,
-  selectionTime: state.app.selectionTime,
-  error: state.app.error
-});
-
 export default createForm()(NewBookingScreen);
-
-// export default connect((state) => {
-//   return {
-//     selectionDate: state.app.selectionDate,
-//     selectionTime: state.app.selectionTime,
-//     error: state.app.error
-//   }
-// })(createForm({
-//   mapPropsToFields(props) {
-//     console.log('mapPropsToFields', props);
-//     return {
-//       // selectionDate: props.formState.selectionDate,
-//       // selectionTime: props.formState.selectionTime,
-//     };
-//   },
-//   onFieldsChange(props, fields) {
-//     console.log('onFieldsChange', fields);
-//     props.dispatch({
-//       type: 'save_fields',
-//       payload: fields,
-//     });
-//   },
-// })(NewBookingScreen));

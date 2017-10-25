@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from '../reducers/app/actions';
-import { View } from 'react-native';
-import CalendarView from '../components/calendar_view';
-import moment from 'moment';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as actions from "../reducers/app/actions";
+import { View, StyleSheet, Text } from "react-native";
+import CalendarView from "../components/calendar_view";
+import { Agenda } from "react-native-calendars";
+import moment from "moment";
 
 class MainCalendarScreen extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      bookings: {}
-    }
+      bookings: {},
+      day: moment().format("YYYY-MM-DD")
+    };
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
@@ -20,11 +21,10 @@ class MainCalendarScreen extends Component {
   }
 
   getBookings() {
-    this.props.fetchBookings()
-    .then(() => {
+    this.props.fetchBookings().then(() => {
       let bookings = {};
       this.props.bookings.map(booking => {
-        const strTime = moment(booking.date).format('YYYY-MM-DD');
+        const strTime = moment(booking.date).format("YYYY-MM-DD");
         if (!this.props.bookings[strTime]) {
           bookings[strTime] = [];
           booking.bookings.map(oneBooking => {
@@ -32,9 +32,9 @@ class MainCalendarScreen extends Component {
               name: oneBooking.bookerName,
               surname: oneBooking.bookerSurname,
               time: oneBooking.bookerTime,
-              requests: oneBooking.requests,
+              requests: oneBooking.requests
             });
-          })
+          });
         }
       });
       this.setState({ bookings });
@@ -44,10 +44,10 @@ class MainCalendarScreen extends Component {
   static navigatorButtons = {
     rightButtons: [
       {
-        title: 'Add', // for a textual button, provide the button title (label)
-        id: 'add', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
-        disableIconTint: true, // optional, by default the image colors are overridden and tinted to navBarButtonColor, set to true to keep the original image colors
+        title: "Add", // for a textual button, provide the button title (label)
+        id: "add", // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
+        testID: "e2e_rules", // optional, used to locate this view in end-to-end tests
+        disableIconTint: true // optional, by default the image colors are overridden and tinted to navBarButtonColor, set to true to keep the original image colors
       }
     ]
   };
@@ -58,35 +58,35 @@ class MainCalendarScreen extends Component {
   componentWillMount() {
     this.props.navigator.toggleTabs({
       tabBarHidden: true,
-      to: 'hidden', // required, 'hidden' = hide tab bar, 'shown' = show tab bar
+      to: "hidden", // required, 'hidden' = hide tab bar, 'shown' = show tab bar
       animated: false, // does the toggle have transition animation or does it happen immediately (optional)
       drawUnderTabBar: true
     });
   }
-  
-  handleSubmit = (name, surname, selectionDate, selectionTime, requests) => {
-    this.props.createBooking(
-      name, surname, selectionTime, selectionDate, requests
-    ).then(status => {
-      if (status) {
-        this.getBookings();
-        this.props.navigator.pop({ animationType: 'slide-down' });
-      };
-    });
-  }
-  
 
-  onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-    if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
-      if (event.id == 'add') { // this is the same id field from the static navigatorButtons definition
+  handleSubmit = (name, surname, selectionDate, selectionTime, requests) => {
+    this.props
+      .createBooking(name, surname, selectionTime, selectionDate, requests)
+      .then(status => {
+        if (status) {
+          this.getBookings();
+          this.props.navigator.pop({ animationType: "slide-down" });
+        }
+      });
+  };
+
+  onNavigatorEvent(event) {
+    if (event.type == "NavBarButtonPress") {
+      if (event.id == "add") {
         this.props.navigator.push({
-          screen: "tombnb.NewBookingScreen", // unique ID registered with Navigation.registerScreen
-          title: "New Booking", // title of the screen as appears in the nav bar (optional)
+          screen: "tombnb.NewBookingScreen",
+          title: "New Booking",
           passProps: {
-            handleSubmit: this.handleSubmit
-          }, // simple serializable object that will pass as props to the modal (optional)
-          navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-          animationType: 'slide-up' // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+            handleSubmit: this.handleSubmit,
+            day: this.state.day
+          },
+          navigatorStyle: {},
+          animationType: "slide-up"
         });
       }
     }
@@ -95,21 +95,78 @@ class MainCalendarScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <CalendarView
-          bookings={this.state.bookings}
+        <Agenda
+          items={this.state.bookings}
+          selected={this.state.selection}
+          maxDate={moment()
+            .add(2, "weeks")
+            .format("YYYY-MM-DD")}
+          onDayPress={day =>
+            this.setState({ day: moment(day).format("YYYY-MM-DD") })}
+          renderItem={this.renderItem}
+          renderEmptyDate={this.renderEmptyDate}
+          rowHasChanged={this.rowHasChanged}
         />
       </View>
-    )
+    );
   }
+
+  renderRequests = requests => {
+    if (requests) {
+      return requests.map(request => {
+        if (request.checked) {
+          return <Text>{request.name}</Text>;
+        }
+      });
+    }
+  };
+
+  renderItem = item => {
+    return (
+      <View style={[styles.item, { height: item.height }]}>
+        <Text>
+          Name: {item.name} {item.surname}
+        </Text>
+        <Text>Time: {moment(item.time).format("HH:mm")}</Text>
+        <Text>----</Text>
+        {this.renderRequests(item.requests)}
+      </View>
+    );
+  };
+
+  renderEmptyDate = () => {
+    return (
+      <View style={styles.emptyDate}>
+        <Text>This is empty date!</Text>
+      </View>
+    );
+  };
+
+  rowHasChanged = (r1, r2) => {
+    return true;
+  };
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    bookings: state.app.bookings,
-  }
-}
+    bookings: state.app.bookings
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  { ...actions }
-)(MainCalendarScreen);
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: "white",
+    flex: 1,
+    borderRadius: 5,
+    padding: 15,
+    marginRight: 20,
+    marginTop: 17
+  },
+  emptyDate: {
+    height: 15,
+    flex: 1,
+    paddingTop: 30
+  }
+});
+
+export default connect(mapStateToProps, { ...actions })(MainCalendarScreen);
