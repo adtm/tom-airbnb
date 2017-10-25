@@ -34,49 +34,33 @@ class NewBookingScreen extends Component {
       });
   }
 
-  // onSubmit = () => {
-  //   // this.props.handleSubmit(
-  //   //   this.state.name,
-  //   //   this.state.surname,
-  //   //   this.props.selectionDate,
-  //   //   this.props.selectionTime,
-  //   // this.state.switches)
-  // };
-
-  // utcDateToLocalString = momentInUTC => {
-  //   return moment(momentInUTC)
-  //     .local()
-  //     .format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
-  // };
-
-  // addToCalendar = (title, startDateUTC) => {
-  //   const eventConfig = {
-  //     title: "Lunch",
-  //     startDate: this.utcDateToLocalString(moment.utc()),
-  //     endDate: this.utcDateToLocalString(
-  //       moment.utc(moment.utc()).add(1, "hours")
-  //     )
-  //   };
-
-  //   AddCalendarEvent.presentNewCalendarEventDialog(eventConfig)
-  //     .then(eventId => {
-  //       //handle success (receives event id) or dismissing the modal (receives false)
-  //       if (eventId) {
-  //         console.warn(eventId);
-  //       } else {
-  //         console.warn("dismissed");
-  //       }
-  //     })
-  //     .catch(error => {
-  //       // handle error such as when user rejected permissions
-  //       console.warn(error);
-  //     });
-  // };
+  addToCalendar = values => {
+    AddCalendarEvent.presentNewCalendarEventDialog({
+      title: "Tombnb Booking",
+      startDate: moment(
+        moment(values.day, "YYYY-MM-DD").format("YYYY-MM-DD") +
+          moment(values.time, "HH:mm").format("HH:mm"),
+        "YYYY-MM-DD HH:mm:ss.SSSZZZ"
+      )
+    })
+      .then(eventId => {
+        if (eventId) {
+          console.warn(eventId);
+        } else {
+          console.warn("dismissed");
+        }
+      })
+      .catch(error => {
+        console.warn(error);
+      });
+  };
 
   onSubmit = () => {
-    this.props.form.validateFields({ force: true }, error => {
+    const { getFieldsValue, validateFields } = this.props.form;
+    validateFields({ force: true }, error => {
       if (!error) {
-        console.log(this.props.form.getFieldsValue());
+        this.addToCalendar(getFieldsValue());
+        // http
       } else {
         alert("Validation failed");
       }
@@ -119,12 +103,10 @@ class NewBookingScreen extends Component {
             okText="OK"
             dismissText="Cancel"
             locale={enUs}
-            minDate={moment().format("YYYY-MM-DD")}
-            maxDate={moment()
-              .add(2, "weeks")
-              .format("YYYY-MM-DD")}
+            minDate={moment()}
+            maxDate={moment().add(2, "weeks")}
             {...getFieldProps("day", {
-              initialValue: moment(this.props.day, "YYYY-MM-DD")
+              initialValue: moment(this.props.day)
             })}
           >
             <List.Item arrow="horizontal">Book Date</List.Item>
@@ -151,7 +133,7 @@ class NewBookingScreen extends Component {
                       extra={
                         <Switch
                           checked={item.checked}
-                          {...getFieldProps(`switch-${index}`, {
+                          {...getFieldProps(`${item.name}`, {
                             initialValue: false,
                             valuePropName: "checked"
                           })}
@@ -177,20 +159,18 @@ class NewBookingScreen extends Component {
           <List.Item
             extra={
               <Switch
-                checked={this.state.checked}
-                onChange={checked => this.setState({ checked })}
+                {...getFieldProps("iCal", {
+                  initialValue: false,
+                  valuePropName: "checked"
+                })}
               />
             }
           >
             Save to iCalendar
           </List.Item>
         </List>
-        <Button
-          style={{ margin: 10 }}
-          type={this.props.error ? "warning" : "primary"}
-          onClick={this.onSubmit}
-        >
-          {this.props.error ? this.props.error : "Book"}
+        <Button style={{ margin: 10 }} type="primary" onClick={this.onSubmit}>
+          Book
         </Button>
       </ScrollView>
     );
