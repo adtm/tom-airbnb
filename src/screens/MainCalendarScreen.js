@@ -1,12 +1,23 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../reducers/app/actions";
-import { View, StyleSheet, Text } from "react-native";
-import CalendarView from "../components/calendar_view";
+import { View, StyleSheet, Text } from "react-native"; 
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
+import axios from 'axios';
 
-class MainCalendarScreen extends Component {
+
+export default class MainCalendarScreen extends Component {
+
+  static navigatorButtons = {
+    rightButtons: [{
+        title: "Add", 
+        id: "add", 
+        testID: "e2e_rules",
+        disableIconTint: true 
+      }]
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -17,18 +28,15 @@ class MainCalendarScreen extends Component {
   }
 
   componentDidMount() {
-    this.getBookings();
-  }
-
-  getBookings() {
-    this.props.fetchBookings().then(() => {
-      let bookings = {};
-      this.props.bookings.map(booking => {
+    axios.get('http://localhost:3000/api/bookings/get')
+      .then((bookings) => {
+      let bookingsRef = {};
+      bookings.data.map(booking => {
         const strTime = moment(booking.date).format("YYYY-MM-DD");
-        if (!this.props.bookings[strTime]) {
-          bookings[strTime] = [];
+        if (!bookings[strTime]) {
+          bookingsRef[strTime] = [];
           booking.bookings.map(oneBooking => {
-            bookings[strTime].push({
+            bookingsRef[strTime].push({
               name: oneBooking.bookerName,
               surname: oneBooking.bookerSurname,
               time: oneBooking.bookerTime,
@@ -37,43 +45,19 @@ class MainCalendarScreen extends Component {
           });
         }
       });
-      this.setState({ bookings });
+      this.setState({ bookings: bookingsRef });
+      console.log(this.state)
     });
   }
 
-  static navigatorButtons = {
-    rightButtons: [
-      {
-        title: "Add", // for a textual button, provide the button title (label)
-        id: "add", // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        testID: "e2e_rules", // optional, used to locate this view in end-to-end tests
-        disableIconTint: true // optional, by default the image colors are overridden and tinted to navBarButtonColor, set to true to keep the original image colors
-      }
-    ]
-  };
-
-  /**
-   * PR waiting about tabs not hiding
-   */
   componentWillMount() {
     this.props.navigator.toggleTabs({
       tabBarHidden: true,
-      to: "hidden", // required, 'hidden' = hide tab bar, 'shown' = show tab bar
-      animated: false, // does the toggle have transition animation or does it happen immediately (optional)
+      to: "hidden", 
+      animated: true, 
       drawUnderTabBar: true
     });
   }
-
-  handleSubmit = (name, surname, selectionDate, selectionTime, requests) => {
-    this.props
-      .createBooking(name, surname, selectionTime, selectionDate, requests)
-      .then(status => {
-        if (status) {
-          this.getBookings();
-          this.props.navigator.pop({ animationType: "slide-down" });
-        }
-      });
-  };
 
   onNavigatorEvent(event) {
     if (event.type == "NavBarButtonPress") {
@@ -82,7 +66,6 @@ class MainCalendarScreen extends Component {
           screen: "tombnb.NewBookingScreen",
           title: "New Booking",
           passProps: {
-            handleSubmit: this.handleSubmit,
             day: this.state.day
           },
           navigatorStyle: {},
@@ -147,11 +130,6 @@ class MainCalendarScreen extends Component {
   };
 }
 
-const mapStateToProps = state => {
-  return {
-    bookings: state.app.bookings
-  };
-};
 
 const styles = StyleSheet.create({
   item: {
@@ -167,6 +145,4 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30
   }
-});
-
-export default connect(mapStateToProps, { ...actions })(MainCalendarScreen);
+}); 

@@ -9,18 +9,21 @@ import {
   Switch,
   TextareaItem,
   InputItem,
-  DatePicker
+  DatePicker,
+  Modal
 } from "antd-mobile";
 import enUs from "antd-mobile/lib/date-picker/locale/en_US";
+import * as AddCalendarEvent from "react-native-add-calendar-event";
 import moment from "moment";
 
-import * as AddCalendarEvent from "react-native-add-calendar-event";
-
 class NewBookingScreen extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
       checked: true,
+      loading: false,
+      modal: false,
       switches: []
     };
   }
@@ -52,7 +55,24 @@ class NewBookingScreen extends Component {
         if (this.state.checked) {
           this.addToCalendar(getFieldsValue());
         }
-        // http
+        
+        this.setState({ loading: true });
+        // axios.post('http://localhost:3000/api/bookings/create', {
+        //   bookerName: getFieldsValue().name,
+        //   bookerSurname: getFieldsValue().surname,
+        //   bookerTime: getFieldsValue().time,
+        //   date: getFieldsValue().day,
+        //   requests: []
+        // }).then((response) => {
+          
+        // })
+        this.setState({ loading: false, modal: true });
+
+
+
+
+
+
       } else {
         alert("Validation failed");
       }
@@ -160,9 +180,24 @@ class NewBookingScreen extends Component {
             Save to iCalendar
           </List.Item>
         </List>
-        <Button style={{ margin: 10 }} type="primary" onClick={this.onSubmit}>
-          Book
+        <Button
+          style={{ margin: 10 }}
+          type="primary"
+          onClick={this.onSubmit}
+          loading={this.state.loading}>
+            Book
         </Button>
+        <Modal
+          title="Congrats!"
+          transparent
+          maskClosable={false}
+          visible={this.state.modal}
+          onClose={() => this.setState({ modal: !this.state.modal })}
+          footer={[{ text: 'Close', onPress: () => { this.setState({ modal: !this.state.modal })} }]}
+          platform="ios"
+        >
+          <Text style={{ marginTop: 20, textAlign: 'center' }}>Tom was booked! u dirty :)</Text>
+        </Modal>
       </ScrollView>
     );
   }
