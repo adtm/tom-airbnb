@@ -29,6 +29,7 @@ export default class MainCalendarScreen extends Component {
     axios.get('http://localhost:3000/api/bookings/get')
       .then((bookings) => {
       let bookingsRef = {};
+      console.log(bookings);
       bookings.data.map(booking => {
         const strTime = moment(booking.date).format("YYYY-MM-DD");
         if (!bookings[strTime]) {
@@ -44,7 +45,6 @@ export default class MainCalendarScreen extends Component {
         }
       });
       this.setState({ bookings: bookingsRef });
-      console.log(this.state)
     });
   }
 

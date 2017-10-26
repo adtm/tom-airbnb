@@ -55,24 +55,21 @@ class NewBookingScreen extends Component {
         if (this.state.checked) {
           this.addToCalendar(getFieldsValue());
         }
-        
         this.setState({ loading: true });
-        // axios.post('http://localhost:3000/api/bookings/create', {
-        //   bookerName: getFieldsValue().name,
-        //   bookerSurname: getFieldsValue().surname,
-        //   bookerTime: getFieldsValue().time,
-        //   date: getFieldsValue().day,
-        //   requests: []
-        // }).then((response) => {
-          
-        // })
-        this.setState({ loading: false, modal: true });
-
-
-
-
-
-
+        console.log(getFieldsValue());
+        axios.post('http://localhost:3000/api/bookings/create', {
+          bookerName: getFieldsValue().name,
+          bookerSurname: getFieldsValue().surname,
+          bookerTime: getFieldsValue().time,
+          date: getFieldsValue().day,
+          requests: []
+        }).then((response) => {
+          this.setState({ loading: false });
+          alert("Booking created Milda! :)");          
+        })
+        .catch((error) => {
+          alert('There was an error!');
+        })
       } else {
         alert("Validation failed");
       }
@@ -187,17 +184,6 @@ class NewBookingScreen extends Component {
           loading={this.state.loading}>
             Book
         </Button>
-        <Modal
-          title="Congrats!"
-          transparent
-          maskClosable={false}
-          visible={this.state.modal}
-          onClose={() => this.setState({ modal: !this.state.modal })}
-          footer={[{ text: 'Close', onPress: () => { this.setState({ modal: !this.state.modal })} }]}
-          platform="ios"
-        >
-          <Text style={{ marginTop: 20, textAlign: 'center' }}>Tom was booked! u dirty :)</Text>
-        </Modal>
       </ScrollView>
     );
   }
