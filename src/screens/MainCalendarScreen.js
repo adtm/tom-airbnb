@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import * as actions from "../reducers/app/actions";
+import React, { Component } from "react"; 
 import { View, StyleSheet, Text } from "react-native"; 
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
