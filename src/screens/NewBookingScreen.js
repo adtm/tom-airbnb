@@ -20,7 +20,6 @@ class NewBookingScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: "",
       checked: true,
       switches: []
     };
@@ -41,25 +40,18 @@ class NewBookingScreen extends Component {
         moment(values.day, "YYYY-MM-DD").format("YYYY-MM-DD") +
           moment(values.time, "HH:mm").format("HH:mm"),
         "YYYY-MM-DD HH:mm:ss.SSSZZZ"
-      )
-    })
-      .then(eventId => {
-        if (eventId) {
-          console.warn(eventId);
-        } else {
-          console.warn("dismissed");
-        }
-      })
-      .catch(error => {
-        console.warn(error);
-      });
+      ),
+      notes: values.notes
+    });
   };
 
   onSubmit = () => {
     const { getFieldsValue, validateFields } = this.props.form;
     validateFields({ force: true }, error => {
       if (!error) {
-        this.addToCalendar(getFieldsValue());
+        if (this.state.checked) {
+          this.addToCalendar(getFieldsValue());
+        }
         // http
       } else {
         alert("Validation failed");
@@ -151,18 +143,17 @@ class NewBookingScreen extends Component {
 
         <List renderHeader={() => "Additional Information"}>
           <TextareaItem
-            value={this.state.notes}
-            onChange={notes => this.setState({ notes })}
+            {...getFieldProps("notes", {
+                  initialValue: '',
+                })}
             rows={5}
             count={100}
           />
           <List.Item
             extra={
               <Switch
-                {...getFieldProps("iCal", {
-                  initialValue: false,
-                  valuePropName: "checked"
-                })}
+                checked={this.state.checked}
+                onChange={(checked) => this.setState({ checked })}
               />
             }
           >
