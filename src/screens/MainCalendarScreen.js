@@ -1,5 +1,8 @@
 import React, { Component } from "react"; 
 
+import { connect } from 'react-redux';
+import * as actions from '../actions/actions';
+
 import { View, StyleSheet, Text } from "react-native";
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
@@ -21,7 +24,6 @@ class MainCalendarScreen extends Component {
     super(props);
     this.state = {
       bookings: {},
-      day: moment().format("YYYY-MM-DD")
     };
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
@@ -54,7 +56,7 @@ class MainCalendarScreen extends Component {
           screen: "tombnb.NewBookingScreen",
           title: "New Booking",
           passProps: {
-            day: this.state.day
+            selectedDay: this.props.selectedDay
           },
           navigatorStyle: {},
           animationType: "slide-up"
@@ -68,14 +70,14 @@ class MainCalendarScreen extends Component {
       <View style={{ flex: 1 }}>
         <Agenda
           items={this.state.bookings}
-          selected={this.state.selection}
+          selected={this.props.selectedDay}
           maxDate={moment()
             .add(2, "weeks")
             .format("YYYY-MM-DD")}
           onDayChange={day =>
-            this.setState({ day: moment(day).subtract(1, "month") })}
+            this.props.updateSelectedDay(moment(day).subtract(1, "month"))}
           onDayPress={day =>
-            this.setState({ day: moment(day).subtract(1, "month") })}
+            this.props.updateSelectedDay(moment(day).subtract(1, "month"))}
           renderItem={this.renderItem}
           renderEmptyDate={this.renderEmptyDate}
           rowHasChanged={this.rowHasChanged}
@@ -136,5 +138,10 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = state => {
+  return {
+    selectedDay: state.default.selectedDay
+  }
+}
 
-export default MainCalendarScreen;
+export default connect(mapStateToProps, { ...actions })(MainCalendarScreen);

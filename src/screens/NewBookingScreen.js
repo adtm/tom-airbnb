@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+
+import { connect } from 'react-redux';
+import * as actions from '../actions/actions';
+
 import axios from "axios";
 import { createForm } from "rc-form";
 import { ScrollView, View, Text } from "react-native";
@@ -115,7 +119,7 @@ class NewBookingScreen extends Component {
             minDate={moment()}
             maxDate={moment().add(2, "weeks")}
             {...getFieldProps("day", {
-              initialValue: moment(this.props.day).utc().add(1, 'day')
+              initialValue: moment(this.props.selectedDay)
             })}
           >
             <List.Item arrow="horizontal">Book Date</List.Item>
@@ -189,4 +193,20 @@ class NewBookingScreen extends Component {
   }
 }
 
-export default createForm()(NewBookingScreen);
+export default connect((state) => {
+  return {
+    selectedDay: state.default.selectedDay,
+  };
+})(createForm({
+  mapPropsToFields(props) {
+    return {
+      selectedDay: props.selectedDay,
+    };
+  },
+  onFieldsChange(props, fields) {
+    props.dispatch({
+      type: 'UPDATE_SELECTED_DAY',
+      payload: fields.name,
+    });
+  },
+})(NewBookingScreen));
