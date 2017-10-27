@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from "react"; 
+
 import { View, StyleSheet, Text } from "react-native";
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
 import axios from "axios";
 
-export default class MainCalendarScreen extends Component {
+class MainCalendarScreen extends Component {
   static navigatorButtons = {
     rightButtons: [
       {
@@ -134,3 +135,6 @@ const styles = StyleSheet.create({
     paddingTop: 30
   }
 });
+
+
+export default MainCalendarScreen;
