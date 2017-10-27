@@ -115,7 +115,7 @@ class NewBookingScreen extends Component {
             minDate={moment()}
             maxDate={moment().add(2, "weeks")}
             {...getFieldProps("day", {
-              initialValue: moment(this.props.day)
+              initialValue: moment(this.props.day).utc().add(1, 'day')
             })}
           >
             <List.Item arrow="horizontal">Book Date</List.Item>

@@ -1,19 +1,19 @@
-import React, { Component } from "react"; 
-import { View, StyleSheet, Text } from "react-native"; 
+import React, { Component } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { Agenda } from "react-native-calendars";
 import moment from "moment";
-import axios from 'axios';
-
+import axios from "axios";
 
 export default class MainCalendarScreen extends Component {
-
   static navigatorButtons = {
-    rightButtons: [{
-        title: "Add", 
-        id: "add", 
+    rightButtons: [
+      {
+        title: "Add",
+        id: "add",
         testID: "e2e_rules",
-        disableIconTint: true 
-      }]
+        disableIconTint: true
+      }
+    ]
   };
 
   constructor(props) {
@@ -26,10 +26,8 @@ export default class MainCalendarScreen extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3000/api/bookings/get')
-      .then((bookings) => {
+    axios.get("http://localhost:3000/api/bookings/get").then(bookings => {
       let bookingsRef = {};
-      console.log(bookings);
       bookings.data.map(booking => {
         const strTime = moment(booking.date).format("YYYY-MM-DD");
         if (!bookings[strTime]) {
@@ -45,15 +43,6 @@ export default class MainCalendarScreen extends Component {
         }
       });
       this.setState({ bookings: bookingsRef });
-    });
-  }
-
-  componentWillMount() {
-    this.props.navigator.toggleTabs({
-      tabBarHidden: true,
-      to: "hidden", 
-      animated: true, 
-      drawUnderTabBar: true
     });
   }
 
@@ -82,8 +71,10 @@ export default class MainCalendarScreen extends Component {
           maxDate={moment()
             .add(2, "weeks")
             .format("YYYY-MM-DD")}
+          onDayChange={day =>
+            this.setState({ day: moment(day).subtract(1, "month") })}
           onDayPress={day =>
-            this.setState({ day: moment(day).format("YYYY-MM-DD") })}
+            this.setState({ day: moment(day).subtract(1, "month") })}
           renderItem={this.renderItem}
           renderEmptyDate={this.renderEmptyDate}
           rowHasChanged={this.rowHasChanged}
@@ -128,7 +119,6 @@ export default class MainCalendarScreen extends Component {
   };
 }
 
-
 const styles = StyleSheet.create({
   item: {
     backgroundColor: "white",
@@ -143,4 +133,4 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30
   }
-}); 
+});
