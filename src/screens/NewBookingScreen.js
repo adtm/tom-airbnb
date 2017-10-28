@@ -61,13 +61,25 @@ class NewBookingScreen extends Component {
         }
         this.setState({ loading: true });
         console.log(getFieldsValue());
-        axios.post('http://localhost:3000/api/bookings/create', {
+        const requests = {
+          
+        };
+        axios.post('https://tombnb-server.herokuapp.com/api/bookings/create', {
           bookerName: getFieldsValue().name,
           bookerSurname: getFieldsValue().surname,
           bookerTime: getFieldsValue().time,
           date: getFieldsValue().day,
-          requests: []
-        }).then((response) => {
+          requests: [
+            { name: "perfume", checked: getFieldsValue().Perfume },
+            { name: "cooking", checked: getFieldsValue().Cooking },
+            { name: "sleepover", checked: getFieldsValue().Sleepover },
+            { name: "night-drive", checked: getFieldsValue()["Night Drive"] },
+            { name: "mc-drive", checked: getFieldsValue()["MC drive-through"] },
+            { name: "movie-night", checked: getFieldsValue()["Movie night"] },
+            { name: "car-delivery", checked: getFieldsValue()["Car delivery"] },
+            { name: "food-delivery", checked: getFieldsValue()["Food deliver"] },
+          ]
+        }).then(() => {
           this.setState({ loading: false });
           alert("Booking created Milda! :)");          
         })

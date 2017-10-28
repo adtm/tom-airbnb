@@ -29,7 +29,7 @@ class MainCalendarScreen extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3000/api/bookings/get").then(bookings => {
+    axios.get("https://tombnb-server.herokuapp.com/api/bookings/get").then(bookings => {
       let bookingsRef = {};
       bookings.data.map(booking => {
         const strTime = moment(booking.date).format("YYYY-MM-DD");
@@ -88,9 +88,9 @@ class MainCalendarScreen extends Component {
 
   renderRequests = requests => {
     if (requests) {
-      return requests.map(request => {
+      return requests.map((request, index) => {
         if (request.checked) {
-          return <Text>{request.name}</Text>;
+          return <Text key={index}>{request.name}</Text>;
         }
       });
     }
