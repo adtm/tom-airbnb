@@ -1,101 +1,224 @@
-import React, { Component } from 'react';
-import { ScrollView, View, Text } from 'react-native';
-import Button from 'antd-mobile/lib/button';
- 
+import React, { Component } from "react";
+
 import { connect } from 'react-redux';
-import axios from 'axios'
+import * as actions from '../actions/actions';
 
-import DateTimeView from '../components/date_time_view'
-import PersonInformation from '../components/person_information';
-import RequestList from '../components/request_list';
-
+import axios from "axios";
+import { createForm } from "rc-form";
+import { ScrollView, View, Text } from "react-native";
+import {
+  Accordion,
+  Button,
+  List,
+  Switch,
+  TextareaItem,
+  InputItem,
+  DatePicker,
+  Modal
+} from "antd-mobile";
+import enUs from "antd-mobile/lib/date-picker/locale/en_US";
+import * as AddCalendarEvent from "react-native-add-calendar-event";
+import moment from "moment";
 
 class NewBookingScreen extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      surname: '',
-    };
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-  }
-
-  componentDidMount() { 
-      axios
-        .get('http://localhost:3000/api/request')
-        .then(response => this.setState({ switches: response.data }))
-  }
-
-  changeSwitch = (item) => {
-    let stateCopy = this.state.switches;
-    for (var i in stateCopy) {
-      if (stateCopy[i].name === item.name) {
-         stateCopy[i].checked = !stateCopy[i].checked;
-         this.setState({ switches: stateCopy });
-         break; //Stop this loop, we found it!
-      }
+      checked: true,
+      loading: false,
+      modal: false,
+      switches: []
     };
   }
 
-  static navigatorButtons = {
-    leftButtons: [{
-        title: 'Back', // for a textual button, provide the button title (label)
-        id: 'back', // id for this button, given in onNavigatorEvent(event) to help understand which button was clicked
-        testID: 'e2e_rules', // optional, used to locate this view in end-to-end tests
-      }]
+  componentDidMount() {
+    axios
+      .get("https://tombnb-server.herokuapp.com/api/request")
+      .then(response => {
+        this.setState({ switches: response.data });
+      });
+  }
+
+  addToCalendar = values => {
+    AddCalendarEvent.presentNewCalendarEventDialog({
+      title: "Tombnb Booking",
+      startDate: moment(
+        moment(values.day, "YYYY-MM-DD").format("YYYY-MM-DD") +
+          moment(values.time, "HH:mm").format("HH:mm"),
+        "YYYY-MM-DD HH:mm:ss.SSSZZZ"
+      ),
+      notes: values.notes
+    });
   };
-  
-  onNavigatorEvent(event) { // this is the onPress handler for the two buttons together
-    if (event.type == 'NavBarButtonPress') { // this is the event type for button presses
-      if (event.id == 'back') { // this is the same id field from the static navigatorButtons definition
-        this.props.navigator.pop({
-          animationType: 'slide-down' // 'none' / 'slide-down' , dismiss animation for the modal (optional, default 'slide-down')
-        });
-      }
-    }
-  }
 
   onSubmit = () => {
-    this.props.handleSubmit(
-      this.state.name, 
-      this.state.surname, 
-      this.props.selectionDate, 
-      this.props.selectionTime,
-    this.state.switches)
-  }
+    const { getFieldsValue, validateFields } = this.props.form;
+    validateFields({ force: true }, error => {
+      if (!error) {
+        if (this.state.checked) {
+          this.addToCalendar(getFieldsValue());
+        }
+        this.setState({ loading: true });
+        console.log(getFieldsValue());
+        const requests = {
+          
+        };
+        axios.post('https://tombnb-server.herokuapp.com/api/bookings/create', {
+          bookerName: getFieldsValue().name,
+          bookerSurname: getFieldsValue().surname,
+          bookerTime: getFieldsValue().time,
+          date: getFieldsValue().day,
+          requests: [
+            { name: "perfume", checked: getFieldsValue().Perfume },
+            { name: "cooking", checked: getFieldsValue().Cooking },
+            { name: "sleepover", checked: getFieldsValue().Sleepover },
+            { name: "night-drive", checked: getFieldsValue()["Night Drive"] },
+            { name: "mc-drive", checked: getFieldsValue()["MC drive-through"] },
+            { name: "movie-night", checked: getFieldsValue()["Movie night"] },
+            { name: "car-delivery", checked: getFieldsValue()["Car delivery"] },
+            { name: "food-delivery", checked: getFieldsValue()["Food deliver"] },
+          ]
+        }).then(() => {
+          this.setState({ loading: false });
+          alert("Booking created Milda! :)");          
+        })
+        .catch((error) => {
+          alert('There was an error!');
+        })
+      } else {
+        alert("Validation failed");
+      }
+    });
+  };
 
   render() {
+    const { getFieldProps, getFieldError } = this.props.form;
     return (
       <ScrollView>
-        <PersonInformation 
-          name={this.state.name}
-          surname={this.state.surname}
-          setName={(name) => this.setState({ name })}          // change to one
-          setSurname={(surname) => this.setState({ surname })} // change to one
-        />
-        <DateTimeView
-          selectionDate={this.props.selectionDate}
-          selectionTime={this.props.selectionTime}
-        />
-        <RequestList
-            data={this.state.switches}
-            changeSwitch={this.changeSwitch}
-        />
+        <List renderHeader={() => "Person information"}>
+          <TextareaItem
+            {...getFieldProps("name", {
+              rules: [{ required: true, message: "Please input your name" }]
+            })}
+            clear
+            error={!!getFieldError("name")}
+            onErrorClick={() => {
+              alert(getFieldError("name").join("、"));
+            }}
+            placeholder="Name"
+          />
+          <TextareaItem
+            {...getFieldProps("surname", {
+              rules: [{ required: true, message: "Please input your surname" }]
+            })}
+            clear
+            error={!!getFieldError("surname")}
+            onErrorClick={() => {
+              alert(getFieldError("surname").join("、"));
+            }}
+            placeholder="Surname"
+          />
+        </List>
+
+        <List renderHeader={() => "Booking Information"}>
+          <DatePicker
+            mode="date"
+            format={val => val.format("YYYY-MM-DD")}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            minDate={moment()}
+            maxDate={moment().add(2, "weeks")}
+            {...getFieldProps("day", {
+              initialValue: moment(this.props.selectedDay)
+            })}
+          >
+            <List.Item arrow="horizontal">Book Date</List.Item>
+          </DatePicker>
+          <DatePicker
+            mode="time"
+            format={val => val.format("HH:mm")}
+            okText="OK"
+            dismissText="Cancel"
+            locale={enUs}
+            {...getFieldProps("time", {
+              initialValue: moment()
+            })}
+          >
+            <List.Item arrow="horizontal">Book Time</List.Item>
+          </DatePicker>
+          <Accordion>
+            <Accordion.Panel header="Request List">
+              <List>
+                {this.state.switches.map((item, index) => {
+                  return (
+                    <List.Item
+                      key={`${index}+i`}
+                      extra={
+                        <Switch
+                          checked={item.checked}
+                          {...getFieldProps(`${item.name}`, {
+                            initialValue: false,
+                            valuePropName: "checked"
+                          })}
+                        />
+                      }
+                    >
+                      {item.name}
+                    </List.Item>
+                  );
+                })}
+              </List>
+            </Accordion.Panel>
+          </Accordion>
+        </List>
+
+        <List renderHeader={() => "Additional Information"}>
+          <TextareaItem
+            {...getFieldProps("notes", {
+                  initialValue: '',
+                })}
+            rows={5}
+            count={100}
+          />
+          <List.Item
+            extra={
+              <Switch
+                checked={this.state.checked}
+                onChange={(checked) => this.setState({ checked })}
+              />
+            }
+          >
+            Save to iCalendar
+          </List.Item>
+        </List>
         <Button
           style={{ margin: 10 }}
-          type={this.props.error ? "warning" : "primary"}
-          onClick={this.onSubmit}>
-          {this.props.error ? this.props.error : "Book"}</Button>
+          type="primary"
+          onClick={this.onSubmit}
+          loading={this.state.loading}>
+            Book
+        </Button>
       </ScrollView>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  selectionDate: state.app.selectionDate,
-  selectionTime: state.app.selectionTime,
-  error: state.app.error
-})
-
-export default connect(mapStateToProps, null)(NewBookingScreen);
+export default connect((state) => {
+  return {
+    selectedDay: state.default.selectedDay,
+  };
+})(createForm({
+  mapPropsToFields(props) {
+    return {
+      selectedDay: props.selectedDay,
+    };
+  },
+  onFieldsChange(props, fields) {
+    props.dispatch({
+      type: 'UPDATE_SELECTED_DAY',
+      payload: fields.name,
+    });
+  },
+})(NewBookingScreen));

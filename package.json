@@ -4,23 +4,19 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "dev-start": "nodemon ./server/app.js & node node_modules/react-native/local-cli/cli.js start & ",
     "test": "jest"
   },
   "dependencies": {
     "antd-mobile": "^1.6.7",
     "async": "^2.5.0",
     "axios": "^0.16.2",
-    "body-parser": "^1.18.1",
-    "cors": "^2.8.4",
-    "dotenv": "^4.0.0",
-    "express": "^4.15.4",
     "moment": "^2.18.1",
-    "mongoose": "^4.11.11",
-    "nodemon": "^1.12.1",
     "rc-form": "^1.4.8",
     "react": "16.0.0-alpha.12",
+    "react-feather": "^1.0.7",
     "react-native": "0.48.3",
+    "react-native-add-calendar-event": "^0.2.0",
+    "react-native-calendar-events": "^1.4.3",
     "react-native-calendars": "^1.6.2",
     "react-native-navigation": "^1.1.227",
     "react-redux": "^5.0.6",
@@ -30,6 +26,7 @@
   },
   "devDependencies": {
     "babel-jest": "21.0.2",
+    "babel-plugin-import": "^1.6.2",
     "babel-preset-react-native": "4.0.0",
     "jest": "21.1.0",
     "react-test-renderer": "16.0.0-alpha.12"

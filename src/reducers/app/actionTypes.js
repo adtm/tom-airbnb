@@ -1,9 +1,0 @@
-export const GET_TIMES = 'GET_TIMES';
-export const SET_SELECTION_DATE = 'SET_SELECTION_DATE';
-export const SET_SELECTION_TIME = 'SET_SELECTION_TIME';
-
-export const CLEAR_CREATION = 'CLEAR_CREATION';
-
-export const GET_BOOKINGS = 'GET_BOOKINGS';
-export const CREATE_ERROR = 'CREATE_ERROR'
-export const CREATE_BOOKING = 'CREATE_BOOKING';
