@@ -60,10 +60,6 @@ class NewBookingScreen extends Component {
           this.addToCalendar(getFieldsValue());
         }
         this.setState({ loading: true });
-        console.log(getFieldsValue());
-        const requests = {
-          
-        };
         axios.post('https://tombnb-server.herokuapp.com/api/bookings/create', {
           bookerName: getFieldsValue().name,
           bookerSurname: getFieldsValue().surname,
@@ -81,7 +77,17 @@ class NewBookingScreen extends Component {
           ]
         }).then(() => {
           this.setState({ loading: false });
-          alert("Booking created Milda! :)");          
+          alert("Booking created Milda! :)");
+          this.props.navigator.push({
+            screen: "tombnb.MainCalendarScreen",
+            title: "Calendar",
+            passProps: {
+              change: true,
+            },
+            navigatorStyle: {},
+            animationType: "slide-up"
+          });
+          
         })
         .catch((error) => {
           alert('There was an error!');

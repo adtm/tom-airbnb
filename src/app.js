@@ -25,22 +25,24 @@ export default class App {
         {
           label: "Calendar",
           screen: "tombnb.MainCalendarScreen",
-          icon: require("../img/collaboration.png"),
+          icon: require("../img/navigation/icons8-romance.png"),
           title: "Calendar"
         },
         {
           label: "New Booking",
           screen: "tombnb.NewBookingScreen",
-          icon: require("../img/plus.png"),
+          icon: require("../img/navigation/icons8-add-user-male.png"),
           title: "New Booking"
         },
         {
           label: "Analytics",
           screen: "tombnb.AnalyticsScreen",
-          icon: require("../img/line_chart.png"),
+          icon: require("../img/navigation/icons8-rose.png"),
           title: "Analytics"
         }
-      ]
-    });
+      ],
+      tabsStyle: {
+        tabBarTranslucent: false
+    }});
   }
 }

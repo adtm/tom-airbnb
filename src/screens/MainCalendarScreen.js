@@ -24,8 +24,8 @@ class MainCalendarScreen extends Component {
     super(props);
     this.state = {
       bookings: {},
+      change: false,
     };
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   componentDidMount() {
@@ -49,7 +49,7 @@ class MainCalendarScreen extends Component {
     });
   }
 
-  onNavigatorEvent(event) {
+  onNavigatorEvent = (event) => {
     if (event.type == "NavBarButtonPress") {
       if (event.id == "add") {
         this.props.navigator.push({
@@ -63,6 +63,10 @@ class MainCalendarScreen extends Component {
         });
       }
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
   }
 
   render() {
