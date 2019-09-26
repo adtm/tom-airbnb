@@ -9,7 +9,7 @@
   "dependencies": {
     "antd-mobile": "^1.6.7",
     "async": "^2.5.0",
-    "axios": "^0.16.2",
+    "axios": "^0.18.1",
     "moment": "^2.18.1",
     "rc-form": "^1.4.8",
     "react": "16.0.0-alpha.12",
